@@ -18,6 +18,12 @@ public class Session extends BaseEntityUUID {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
+    public int getDurationMinutes() {
+        return durationMinutes <= 0 ? 1 : durationMinutes;
+    }
+
+    private int durationMinutes;
+
     private  String info;
 
     @ManyToOne

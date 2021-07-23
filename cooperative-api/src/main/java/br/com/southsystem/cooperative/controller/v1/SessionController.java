@@ -3,10 +3,11 @@ package br.com.southsystem.cooperative.controller.v1;
 import br.com.southsystem.cooperative.dto.pageable.PageResponse;
 import br.com.southsystem.cooperative.dto.pageable.PageableRequest;
 import br.com.southsystem.cooperative.dto.pageable.RequestFilter;
-import br.com.southsystem.cooperative.dto.topic.TopicCreateDTO;
-import br.com.southsystem.cooperative.dto.topic.TopicDTO;
-import br.com.southsystem.cooperative.dto.topic.TopicUpdateDTO;
-import br.com.southsystem.cooperative.model.Topic;
+import br.com.southsystem.cooperative.dto.session.SessionCreateDTO;
+import br.com.southsystem.cooperative.dto.session.SessionDTO;
+import br.com.southsystem.cooperative.dto.session.SessionUpdateDTO;
+import br.com.southsystem.cooperative.model.Session;
+import br.com.southsystem.cooperative.service.SessionService;
 import br.com.southsystem.cooperative.service.TopicService;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,57 +28,64 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Api(value = "Cooperative API v1")
 @RestController
-@RequestMapping("/api/v1/pauta")
-public class TopicController {
+@RequestMapping("/api/v1/session")
+public class SessionController {
 
     private final ObjectMapper objectMapper;
+    private final SessionService sessionService;
     private final TopicService topicService;
 
-    public TopicController(ObjectMapper objectMapper, TopicService topicService) {
+    public SessionController(ObjectMapper objectMapper, SessionService sessionService, TopicService topicService) {
         this.objectMapper = objectMapper;
+        this.sessionService = sessionService;
         this.topicService = topicService;
     }
 
     @GetMapping
     public PageResponse listTopic(RequestFilter filter) {
         var pageable = new PageableRequest(filter.getPage(), filter.getSize(), "createdAt", 10).build();
-        var result = topicService.list(pageable);
+        var result = sessionService.list(pageable);
         var topics = result.stream()
-                .map(TopicDTO::fromTopic)
+                .map(SessionDTO::fromSession)
                 .collect(Collectors.toList());
         return new PageResponse<>(result, topics);
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity getTopic(@PathVariable String uuid) {
-        var topic = TopicDTO.fromTopic( topicService.getByUuid(uuid) );
+    public ResponseEntity getSession(@PathVariable String uuid) {
+        var topic = SessionDTO.fromSession( sessionService.getByUuid(uuid) );
         return ResponseEntity.ok().body(topic);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createTopic(@RequestBody TopicCreateDTO topic) {
-        var topicEntity = objectMapper.convertValue(topic, Topic.class);
-        topicEntity.setActive(true);
-        topicEntity.setOpen(true);
-        topicService.create(topicEntity);
+    public void openNewSession(@RequestBody SessionCreateDTO dto) {
+        var entity = objectMapper.convertValue(dto, Session.class);
+        var topic = topicService.getByUuid(dto.getTopicId());
+        entity.setActive(true);
+        entity.setTopic(topic);
+        entity = sessionService.create(entity);
+        ResponseEntity.status(HttpStatus.CREATED)
+                .body(SessionDTO.fromSession(entity));
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateTopic(@RequestParam("topicId") String topicId, @RequestBody TopicUpdateDTO topicUpdateDTO)
+    public void updateSession(@RequestParam("topicId") String topicId, @RequestBody SessionUpdateDTO updateDTO)
             throws JsonMappingException {
-        var topic = topicService.getByUuid(topicId);
-        var topicDTO = objectMapper.convertValue(topicUpdateDTO, Topic.class);
-        var topicMerged = objectMapper.updateValue(topic, topicDTO);
+        var topic = sessionService.getByUuid(topicId);
+        var data = objectMapper.convertValue(updateDTO, Session.class);
+        var topicMerged = objectMapper.updateValue(topic, data);
 
-        topicService.update(topicMerged);
+        sessionService.update(topicMerged);
     }
 
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.FOUND)
-    public void deleteTopic(@PathVariable("uuid") String uuid) {
-        topicService.remove(uuid);
+    public void deleteSession(@PathVariable("uuid") String uuid) {
+        sessionService.remove(uuid);
     }
+
+
 
 }

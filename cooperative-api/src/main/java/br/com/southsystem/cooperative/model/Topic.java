@@ -14,7 +14,6 @@ public class Topic extends BaseEntityUUID {
     private String code;
     private String theme;
     private String description;
-    private boolean active;
     private boolean open;
 
     @OneToMany(mappedBy = "topic")
