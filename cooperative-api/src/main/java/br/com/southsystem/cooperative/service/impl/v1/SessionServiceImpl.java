@@ -1,5 +1,6 @@
 package br.com.southsystem.cooperative.service.impl.v1;
 
+import static br.com.southsystem.cooperative.exceptions.AppMessages.MSG_EXCEPTION_HAS_SESSION_ACTIVE;
 import static br.com.southsystem.cooperative.exceptions.AppMessages.MSG_EXCEPTION_SESSION_STARTED;
 import br.com.southsystem.cooperative.exceptions.BusinessException;
 import br.com.southsystem.cooperative.exceptions.MessageService;
@@ -9,6 +10,7 @@ import br.com.southsystem.cooperative.repository.SessionRepository;
 import br.com.southsystem.cooperative.repository.SpecRepository;
 import br.com.southsystem.cooperative.service.SessionService;
 import java.time.LocalDateTime;
+import javax.transaction.Transactional;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +36,13 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
+    @Transactional
     public Session create(Session data) {
         defineEndTime(data);
+        if(sessionRepository.hasActiveSessionForTopic(data.getTopic().getUuid())) {
+            var msg = MessageService.getMessage(messageSource, MSG_EXCEPTION_HAS_SESSION_ACTIVE.getMsgKey());
+            throw new BusinessException(msg);
+        }
         return SessionService.super.create(data);
     }
 
