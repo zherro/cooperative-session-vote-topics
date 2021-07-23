@@ -1,9 +1,9 @@
 package br.com.southsystem.cooperative.model;
 
-import br.com.southsystem.cooperative.model.type.Vote;
+import br.com.southsystem.cooperative.model.types.Vote;
+import br.com.southsystem.cooperative.model.types.VoteTypeConverter;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -23,6 +23,6 @@ public class SessionVotes  extends BaseEntity {
     @JoinColumn(name = "id_sessao")
     private Session session;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = VoteTypeConverter.class)
     private Vote vote;
 }

@@ -14,7 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<?> tratarBadCredentialsException(ResourceNotFoundException ex, WebRequest request) {
+    public ResponseEntity tratarBadCredentialsException(ResourceNotFoundException ex, WebRequest request) {
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
@@ -28,7 +28,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleUncaught(Exception ex, WebRequest request) {
+    public ResponseEntity handleUncaught(Exception ex, WebRequest request) {
 
         String detail = "Ocorreu um erro interno inesperado no sistema. "
                 + "Tente novamente e se o problema persistir, entre em contato "
@@ -55,6 +55,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .msg(String.format("O recurso %s, que você tentou acessar, é inexistente.", ex.getRequestURL()))
                 .build();
 
+        ex.printStackTrace();
         return this.handleExceptionInternal(ex, error, headers, HttpStatus.NOT_FOUND, request);
     }
 

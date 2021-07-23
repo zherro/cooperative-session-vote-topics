@@ -1,5 +1,6 @@
 package br.com.southsystem.cooperative.model;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
@@ -13,8 +14,10 @@ public abstract class BaseEntityUUID extends BaseEntity {
 
     protected String uuid;
 
+    @Override
     @PrePersist
-    private void prePersist() {
+    protected void prePersist() {
+        createdAt = LocalDateTime.now();
         this.uuid = UUID.randomUUID().toString();
     }
 }

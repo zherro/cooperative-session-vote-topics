@@ -1,4 +1,4 @@
-package br.com.southsystem.cooperative.model.type;
+package br.com.southsystem.cooperative.model.types;
 
 public enum Vote {
     YES("Y"),
@@ -10,7 +10,7 @@ public enum Vote {
         this.value = value;
     }
 
-    public String getDescription() {
+    public String getValue() {
         return this.value;
     }
 }
