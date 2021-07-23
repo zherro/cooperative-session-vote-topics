@@ -56,5 +56,5 @@ public class PageableRequest {
             return PageRequest.of( page,size, Sort.by(Sort.Direction.DESC, "createdAt"));
         }
         return PageRequest.of( page,size, Sort.by(Sort.Direction.DESC, this.sortBy));
-    };
+    }
 }
