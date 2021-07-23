@@ -1,4 +1,4 @@
-package br.com.southsystem.cooperative.service;
+package br.com.southsystem.cooperative.exceptions;
 
 import org.springframework.context.MessageSource;
 
