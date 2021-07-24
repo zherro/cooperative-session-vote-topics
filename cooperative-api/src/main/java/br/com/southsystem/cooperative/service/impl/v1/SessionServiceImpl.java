@@ -2,6 +2,8 @@ package br.com.southsystem.cooperative.service.impl.v1;
 
 import static br.com.southsystem.cooperative.exceptions.AppMessages.MSG_EXCEPTION_HAS_SESSION_ACTIVE;
 import static br.com.southsystem.cooperative.exceptions.AppMessages.MSG_EXCEPTION_SESSION_STARTED;
+
+import br.com.southsystem.cooperative.dto.session.RequestSessionFilter;
 import br.com.southsystem.cooperative.exceptions.BusinessException;
 import br.com.southsystem.cooperative.exceptions.MessageService;
 import br.com.southsystem.cooperative.exceptions.ResourceNotFoundException;
@@ -12,6 +14,8 @@ import br.com.southsystem.cooperative.service.SessionService;
 import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,6 +37,13 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public RuntimeException notFoundException(String key) {
         return new ResourceNotFoundException(messageSource, Session.class.getSimpleName() , key);
+    }
+
+
+    public Page<Session> list(Pageable pageable, RequestSessionFilter filter) {
+        var getAll = filter.getActive() == null || filter.getActive().isEmpty();
+        var activeFilter = Boolean.parseBoolean(filter.getActive());
+        return sessionRepository.findAll(getAll, activeFilter, LocalDateTime.now(), pageable);
     }
 
     @Override

@@ -75,7 +75,7 @@ public class TopicController {
     }
 
     @DeleteMapping("/{uuid}")
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.OK)
     public void deleteTopic(@PathVariable("uuid") String uuid) {
         topicService.remove(uuid);
     }

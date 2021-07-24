@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class SessionServiceVoteImpl implements SessionVoteService {
+public class SessionVoteServiceImpl implements SessionVoteService {
 
     private final SessionVoteRepository sessionVoteRepository;
     private final MessageSource messageSource;
 
-    public SessionServiceVoteImpl(SessionVoteRepository sessionVoteRepository, MessageSource messageSource) {
+    public SessionVoteServiceImpl(SessionVoteRepository sessionVoteRepository, MessageSource messageSource) {
         this.sessionVoteRepository = sessionVoteRepository;
         this.messageSource = messageSource;
     }
@@ -34,11 +34,11 @@ public class SessionServiceVoteImpl implements SessionVoteService {
     @Override
     @Transactional
     public SessionVote create(SessionVote data) {
-
         return SessionVoteService.super.create(data);
     }
+
     @Override
-    public SessionVote update(SessionVote data) {
-        return SessionVoteService.super.update(data);
+    public boolean userHasVoted(String session, String user) {
+        return !sessionVoteRepository.userHasVoted(session, user).isEmpty();
     }
 }

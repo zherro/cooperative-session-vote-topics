@@ -17,7 +17,7 @@ public class UserDTO {
         return UserDTO.builder()
                 .id(user.getUuid())
                 .username(user.getUsername())
-                .person(user.getPerson() == null ? null : new ObjectMapper().convertValue(user.getPerson(), PersonDTO.class))
+                .person(user.getPerson() == null ? null : PersonDTO.fromPerson(user.getPerson()))
                 .build();
     }
 }

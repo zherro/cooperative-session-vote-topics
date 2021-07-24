@@ -3,6 +3,7 @@ package br.com.southsystem.cooperative.controller.v1;
 import br.com.southsystem.cooperative.dto.pageable.PageResponse;
 import br.com.southsystem.cooperative.dto.pageable.PageableRequest;
 import br.com.southsystem.cooperative.dto.pageable.RequestFilter;
+import br.com.southsystem.cooperative.dto.session.RequestSessionFilter;
 import br.com.southsystem.cooperative.dto.session.SessionCreateDTO;
 import br.com.southsystem.cooperative.dto.session.SessionDTO;
 import br.com.southsystem.cooperative.dto.session.SessionUpdateDTO;
@@ -43,9 +44,9 @@ public class SessionController {
     }
 
     @GetMapping
-    public PageResponse listTopic(RequestFilter filter) {
+    public PageResponse listTopic(RequestSessionFilter filter) {
         var pageable = new PageableRequest(filter.getPage(), filter.getSize(), "createdAt", 10).build();
-        var result = sessionService.list(pageable);
+        var result = sessionService.list(pageable, filter);
         var topics = result.stream()
                 .map(SessionDTO::fromSession)
                 .collect(Collectors.toList());
@@ -91,7 +92,7 @@ public class SessionController {
     }
 
     @DeleteMapping("/{uuid}")
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.OK)
     public void deleteSession(@PathVariable("uuid") String uuid) {
         sessionService.remove(uuid);
     }

@@ -23,7 +23,7 @@ public class SessionDTO {
     public static SessionDTO fromSession(Session session) {
         return SessionDTO.builder()
                 .id(session.getUuid())
-                .active(session.isActive())
+                .active(session.isActive() && session.getEndTime().isAfter(LocalDateTime.now()))
                 .durationMinutes(session.getDurationMinutes())
                 .endTime(session.getEndTime())
                 .info(session.getInfo())
