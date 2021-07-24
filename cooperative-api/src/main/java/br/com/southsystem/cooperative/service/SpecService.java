@@ -16,6 +16,7 @@ public interface SpecService<T extends BaseEntity> {
     }
 
     default T create(T data) {
+        data.setActive(true);
         return getRepository().save(data);
     }
 

@@ -1,5 +1,6 @@
 package br.com.southsystem.cooperative.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import lombok.Getter;
@@ -13,7 +14,7 @@ public class User extends BaseEntityUUID {
     private String username;
     private  String password;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST)
     private Person person;
 
 }

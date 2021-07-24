@@ -5,6 +5,9 @@ public enum AppMessages {
     MSG_EXCEPTION_HAS_SESSION_ACTIVE("exceptions.msg.has-session-active"),
     MSG_EXCEPTION_SESSION_NOT_FOUND("exceptions.msg.session-not-found"),
     MSG_EXCEPTION_SESSION_CLOSED("exceptions.msg.session-closed"),
+    MSG_EXCEPTION_USER_DATA_INVALID("exceptions.msg.invalid-user-data"),
+    MSG_EXCEPTION_USERNAME_IN_USE("exceptions.msg.username-in-use"),
+    MSG_EXCEPTION_DOCUMENT_IN_USE("exceptions.msg.document-in-use"),
     ;
 
     private String msgKey;
