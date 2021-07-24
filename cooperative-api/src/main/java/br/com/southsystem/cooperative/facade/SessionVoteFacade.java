@@ -4,6 +4,7 @@ import br.com.southsystem.cooperative.dto.vote.VoteDTO;
 import br.com.southsystem.cooperative.exceptions.AppMessages;
 import br.com.southsystem.cooperative.exceptions.BusinessException;
 import br.com.southsystem.cooperative.exceptions.MessageService;
+import br.com.southsystem.cooperative.model.Session;
 import br.com.southsystem.cooperative.model.SessionVote;
 import br.com.southsystem.cooperative.model.types.Vote;
 import br.com.southsystem.cooperative.service.impl.v1.SessionServiceImpl;
@@ -40,22 +41,14 @@ public class SessionVoteFacade {
     }
 
     public void toVote(final VoteDTO vote) {
-        var now = LocalDateTime.now();
-        var session = sessionService.getByUuid(vote.getSession());
-        if(!session.isActive()
-                && session.getEndTime().isBefore(now)) {
-            throwBusinessException(getMessage(MSG_EXCEPTION_SESSION_CLOSED));
-        } else if(session.getStartTime().isAfter(now)) {
-            throwBusinessException(getMessage(MSG_EXCEPTION_SESSION_NOT_STARTED));
-        }
 
-        if(sessionVoteService.userHasVoted(vote.getSession(), vote.getUser())) {
-            throwBusinessException(getMessage(MSG_EXCEPTION_USER_HAS_VOTED));
-        }
+        var session = sessionService.getByUuid(vote.getSession());
+        checkIfSessionIsAbleToVote(session);
+        checkIfUserHasVoted(vote);
 
         var user = userService.getByUuid(vote.getUser());
         if(!user.isActive()) {
-            throwBusinessException(getMessage(MSG_EXCEPTION_BLOCKED_USER));
+            MessageService.createBusinessException(messageSource,MSG_EXCEPTION_BLOCKED_USER);
         }
 
         var userVote = new SessionVote();
@@ -64,18 +57,26 @@ public class SessionVoteFacade {
         try {
             userVote.setVote( Vote.valueOf(vote.getVote()) );
         } catch (Exception ex) {
-            throwBusinessException(getMessage(MSG_EXCEPTION_INVALID_VOTE_TYPE));
+            MessageService.createBusinessException(messageSource,MSG_EXCEPTION_INVALID_VOTE_TYPE);
         }
 
         sessionVoteService.create(userVote);
     }
 
-    private String getMessage(AppMessages msgExceptionUsernameInUse) {
-        return MessageService.getMessage(messageSource, msgExceptionUsernameInUse.getMsgKey());
+    private void checkIfUserHasVoted(VoteDTO vote) {
+        if(sessionVoteService.userHasVoted(vote.getSession(), vote.getUser())) {
+            MessageService.createBusinessException(messageSource,MSG_EXCEPTION_USER_HAS_VOTED);
+        }
     }
 
-    private void throwBusinessException(String msg) {
-        throw new BusinessException(msg);
+    protected void checkIfSessionIsAbleToVote(Session session) {
+        var now = LocalDateTime.now();
+        if(!session.isActive()
+                || session.getEndTime().isBefore(now)) {
+            MessageService.createBusinessException(messageSource, MSG_EXCEPTION_SESSION_CLOSED);
+        } else if(session.getStartTime().isAfter(now)) {
+            MessageService.createBusinessException(messageSource, MSG_EXCEPTION_SESSION_NOT_STARTED);
+        }
     }
 
     public SessionVote getByUuid(String uuid) {
