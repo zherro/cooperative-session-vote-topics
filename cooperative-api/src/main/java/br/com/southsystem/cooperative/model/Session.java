@@ -31,5 +31,5 @@ public class Session extends BaseEntityUUID {
     private Topic topic;
 
     @OneToMany(mappedBy = "session")
-    private List<SessionVotes> votes;
+    private List<SessionVote> votes;
 }

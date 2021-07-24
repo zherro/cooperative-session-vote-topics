@@ -9,6 +9,7 @@ import br.com.southsystem.cooperative.dto.session.SessionUpdateDTO;
 import br.com.southsystem.cooperative.model.Session;
 import br.com.southsystem.cooperative.service.SessionService;
 import br.com.southsystem.cooperative.service.TopicService;
+import br.com.southsystem.cooperative.service.impl.v1.SessionServiceImpl;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
@@ -32,10 +33,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class SessionController {
 
     private final ObjectMapper objectMapper;
-    private final SessionService sessionService;
+    private final SessionServiceImpl sessionService;
     private final TopicService topicService;
 
-    public SessionController(ObjectMapper objectMapper, SessionService sessionService, TopicService topicService) {
+    public SessionController(ObjectMapper objectMapper, SessionServiceImpl sessionService, TopicService topicService) {
         this.objectMapper = objectMapper;
         this.sessionService = sessionService;
         this.topicService = topicService;
@@ -49,6 +50,15 @@ public class SessionController {
                 .map(SessionDTO::fromSession)
                 .collect(Collectors.toList());
         return new PageResponse<>(result, topics);
+    }
+
+    @GetMapping("/opened/{topic}")
+    public ResponseEntity getOpenedSessionForTopic(@PathVariable String topic) {
+        var session = sessionService.hasActiveSessionForTopic(topic);
+        if(session == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(SessionDTO.fromSession(session));
     }
 
     @GetMapping("/{uuid}")

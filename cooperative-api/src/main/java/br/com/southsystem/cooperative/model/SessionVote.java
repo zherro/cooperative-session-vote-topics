@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity(name = "tb_sessao_votos")
-public class SessionVotes  extends BaseEntity {
+public class SessionVote extends BaseEntityUUID {
 
     @ManyToOne
     @JoinColumn(name = "id_user")

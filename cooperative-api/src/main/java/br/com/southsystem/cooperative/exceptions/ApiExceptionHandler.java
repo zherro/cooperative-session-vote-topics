@@ -27,6 +27,20 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return this.handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
     }
 
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity handleBusinessException(BusinessException ex, WebRequest request) {
+
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        ErrorDetails error = ErrorDetails.builder()
+                .code(status.value())
+                .title("Application Error")
+                .msg(ex.getMessage())
+                .build();
+
+        return this.handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity handleUncaught(Exception ex, WebRequest request) {
 

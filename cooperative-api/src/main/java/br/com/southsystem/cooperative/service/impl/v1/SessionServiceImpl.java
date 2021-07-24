@@ -39,11 +39,19 @@ public class SessionServiceImpl implements SessionService {
     @Transactional
     public Session create(Session data) {
         defineEndTime(data);
-        if(sessionRepository.hasActiveSessionForTopic(data.getTopic().getUuid())) {
+        if(sessionRepository.hasActiveSessionForTopic(data.getTopic().getUuid(), LocalDateTime.now()).size() > 0) {
             var msg = MessageService.getMessage(messageSource, MSG_EXCEPTION_HAS_SESSION_ACTIVE.getMsgKey());
             throw new BusinessException(msg);
         }
         return SessionService.super.create(data);
+    }
+
+    @Override
+    public Session hasActiveSessionForTopic(String topic) {
+        var session =  sessionRepository.hasActiveSessionForTopic(topic, LocalDateTime.now())
+                .stream().findFirst();
+
+        return session.orElse(null);
     }
 
     private void defineEndTime(Session data) {
