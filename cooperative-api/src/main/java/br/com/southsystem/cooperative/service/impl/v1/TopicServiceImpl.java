@@ -28,4 +28,11 @@ public class TopicServiceImpl implements TopicService {
     public RuntimeException notFoundException(String key) {
         return new ResourceNotFoundException(messageSource, Topic.class.getSimpleName() , key);
     }
+
+    @Override
+    public void close(String uuid) {
+        var topic = TopicService.super.getByUuid(uuid);
+        topic.setOpen(false);
+        TopicService.super.update(topic);
+    }
 }

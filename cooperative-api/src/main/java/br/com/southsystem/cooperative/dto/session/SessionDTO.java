@@ -2,7 +2,10 @@ package br.com.southsystem.cooperative.dto.session;
 
 import br.com.southsystem.cooperative.dto.topic.TopicDTO;
 import br.com.southsystem.cooperative.model.Session;
+import br.com.southsystem.cooperative.model.types.VoteSummary;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,6 +22,7 @@ public class SessionDTO {
     private final String info;
 
     private final boolean active;
+    private final List<VoteSummary> result;
 
     public static SessionDTO fromSession(Session session) {
         return SessionDTO.builder()
@@ -30,6 +34,7 @@ public class SessionDTO {
                 .name(session.getName())
                 .startTime(session.getStartTime())
                 .topic( TopicDTO.fromTopic(session.getTopic()) )
+                .result(session.getSessionResult())
                 .build();
     }
 }

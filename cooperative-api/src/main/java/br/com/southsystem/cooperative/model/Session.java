@@ -1,11 +1,14 @@
 package br.com.southsystem.cooperative.model;
 
+import br.com.southsystem.cooperative.model.types.VoteSummary;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,4 +35,7 @@ public class Session extends BaseEntityUUID {
 
     @OneToMany(mappedBy = "session")
     private List<SessionVote> votes;
+
+    @Transient
+    List<VoteSummary> sessionResult = new ArrayList<>();
 }

@@ -7,7 +7,9 @@ import br.com.southsystem.cooperative.dto.topic.TopicCreateDTO;
 import br.com.southsystem.cooperative.dto.topic.TopicDTO;
 import br.com.southsystem.cooperative.dto.topic.TopicUpdateDTO;
 import br.com.southsystem.cooperative.model.Topic;
+import br.com.southsystem.cooperative.service.SessionService;
 import br.com.southsystem.cooperative.service.TopicService;
+import br.com.southsystem.cooperative.service.impl.v1.SessionServiceImpl;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
@@ -16,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,10 +35,12 @@ public class TopicController {
 
     private final ObjectMapper objectMapper;
     private final TopicService topicService;
+    private final SessionServiceImpl sessionService;
 
-    public TopicController(ObjectMapper objectMapper, TopicService topicService) {
+    public TopicController(ObjectMapper objectMapper, TopicService topicService, SessionServiceImpl sessionService) {
         this.objectMapper = objectMapper;
         this.topicService = topicService;
+        this.sessionService = sessionService;
     }
 
     @GetMapping
@@ -51,6 +56,8 @@ public class TopicController {
     @GetMapping("/{uuid}")
     public ResponseEntity getTopic(@PathVariable String uuid) {
         var topic = TopicDTO.fromTopic( topicService.getByUuid(uuid) );
+        var result = sessionService.getLastSessionResultByTopic(uuid);
+        topic.setResult(result);
         return ResponseEntity.ok().body(topic);
     }
 
@@ -72,6 +79,12 @@ public class TopicController {
         var topicMerged = objectMapper.updateValue(topic, topicDTO);
 
         topicService.update(topicMerged);
+    }
+
+    @PatchMapping("/{uuid}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void closeTopic(@PathVariable("uuid") String uuid) {
+        topicService.close(uuid);
     }
 
     @DeleteMapping("/{uuid}")
