@@ -1,8 +1,6 @@
 package br.com.southsystem.cooperative.facade;
 
 import br.com.southsystem.cooperative.dto.vote.VoteDTO;
-import br.com.southsystem.cooperative.exceptions.AppMessages;
-import br.com.southsystem.cooperative.exceptions.BusinessException;
 import br.com.southsystem.cooperative.exceptions.MessageService;
 import br.com.southsystem.cooperative.model.Session;
 import br.com.southsystem.cooperative.model.SessionVote;

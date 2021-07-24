@@ -1,7 +1,6 @@
 package br.com.southsystem.cooperative.service.impl.v1;
 
 import static br.com.southsystem.cooperative.exceptions.AppMessages.MSG_EXCEPTION_HAS_SESSION_ACTIVE;
-import static br.com.southsystem.cooperative.exceptions.AppMessages.MSG_EXCEPTION_RESOURCE_NOT_FOUND;
 import static br.com.southsystem.cooperative.exceptions.AppMessages.MSG_EXCEPTION_SESSION_STARTED;
 
 import br.com.southsystem.cooperative.dto.session.RequestSessionFilter;
@@ -55,7 +54,7 @@ public class SessionServiceImpl implements SessionService {
     @Transactional
     public Session create(Session data) {
         defineEndTime(data);
-        if(sessionRepository.hasActiveSessionForTopic(data.getTopic().getUuid(), LocalDateTime.now()).size() > 0) {
+        if(!sessionRepository.hasActiveSessionForTopic(data.getTopic().getUuid(), LocalDateTime.now()).isEmpty()) {
             throwBusinessException(MSG_EXCEPTION_HAS_SESSION_ACTIVE);
         }
         return SessionService.super.create(data);
@@ -63,10 +62,11 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public Session hasActiveSessionForTopic(String topic) {
-        var session =  sessionRepository.hasActiveSessionForTopic(topic, LocalDateTime.now())
-                .stream().findFirst();
-
-        return session.orElse(null);
+        var sessions =  sessionRepository.hasActiveSessionForTopic(topic, LocalDateTime.now());
+        if(sessions.isEmpty()) {
+            return null;
+        }
+        return sessions.stream().findFirst().orElse(null);
     }
 
     private void defineEndTime(Session data) {
@@ -104,7 +104,7 @@ public class SessionServiceImpl implements SessionService {
         SessionService.super.update(session);
     }
 
-    private BusinessException throwBusinessException(AppMessages msgExceptionSessionStarted) {
+    private void throwBusinessException(AppMessages msgExceptionSessionStarted) {
         var msg = MessageService.getMessage(messageSource, msgExceptionSessionStarted.getMsgKey());
         throw new BusinessException(msg);
     }

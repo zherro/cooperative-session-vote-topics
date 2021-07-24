@@ -4,7 +4,6 @@ import br.com.southsystem.cooperative.dto.topic.TopicDTO;
 import br.com.southsystem.cooperative.model.Session;
 import br.com.southsystem.cooperative.model.types.VoteSummary;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;

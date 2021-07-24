@@ -2,7 +2,6 @@ package br.com.southsystem.cooperative.controller.v1;
 
 import br.com.southsystem.cooperative.dto.vote.VoteDTO;
 import br.com.southsystem.cooperative.facade.SessionVoteFacade;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/vote")
 public class SessionVoteController {
 
-    private final ObjectMapper objectMapper;
     private final SessionVoteFacade voteFacade;
 
-    public SessionVoteController(ObjectMapper objectMapper, SessionVoteFacade voteFacade) {
-        this.objectMapper = objectMapper;
+    public SessionVoteController(SessionVoteFacade voteFacade) {
         this.voteFacade = voteFacade;
     }
 

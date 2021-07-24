@@ -1,7 +1,6 @@
 package br.com.southsystem.cooperative.dto.user;
 
 import br.com.southsystem.cooperative.model.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Builder;
 import lombok.Getter;
 

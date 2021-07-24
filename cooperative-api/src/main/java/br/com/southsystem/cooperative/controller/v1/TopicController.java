@@ -7,7 +7,6 @@ import br.com.southsystem.cooperative.dto.topic.TopicCreateDTO;
 import br.com.southsystem.cooperative.dto.topic.TopicDTO;
 import br.com.southsystem.cooperative.dto.topic.TopicUpdateDTO;
 import br.com.southsystem.cooperative.model.Topic;
-import br.com.southsystem.cooperative.service.SessionService;
 import br.com.southsystem.cooperative.service.TopicService;
 import br.com.southsystem.cooperative.service.impl.v1.SessionServiceImpl;
 import com.fasterxml.jackson.databind.JsonMappingException;

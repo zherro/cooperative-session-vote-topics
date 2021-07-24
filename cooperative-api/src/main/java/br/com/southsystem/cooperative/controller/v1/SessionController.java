@@ -2,13 +2,11 @@ package br.com.southsystem.cooperative.controller.v1;
 
 import br.com.southsystem.cooperative.dto.pageable.PageResponse;
 import br.com.southsystem.cooperative.dto.pageable.PageableRequest;
-import br.com.southsystem.cooperative.dto.pageable.RequestFilter;
 import br.com.southsystem.cooperative.dto.session.RequestSessionFilter;
 import br.com.southsystem.cooperative.dto.session.SessionCreateDTO;
 import br.com.southsystem.cooperative.dto.session.SessionDTO;
 import br.com.southsystem.cooperative.dto.session.SessionUpdateDTO;
 import br.com.southsystem.cooperative.model.Session;
-import br.com.southsystem.cooperative.service.SessionService;
 import br.com.southsystem.cooperative.service.TopicService;
 import br.com.southsystem.cooperative.service.impl.v1.SessionServiceImpl;
 import com.fasterxml.jackson.databind.JsonMappingException;
