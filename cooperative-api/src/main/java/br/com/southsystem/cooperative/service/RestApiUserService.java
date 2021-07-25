@@ -1,6 +1,6 @@
 package br.com.southsystem.cooperative.service;
 
-import br.com.southsystem.cooperative.controller.doc.model.ValidatorResponse;
+import br.com.southsystem.cooperative.dto.ValidatorResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

@@ -1,10 +1,13 @@
 package br.com.southsystem.cooperative.facade;
 
+import br.com.southsystem.cooperative.mock.userapi.doc.model.UserStatus;
 import br.com.southsystem.cooperative.dto.vote.VoteDTO;
 import br.com.southsystem.cooperative.exceptions.MessageService;
 import br.com.southsystem.cooperative.model.Session;
 import br.com.southsystem.cooperative.model.SessionVote;
+import br.com.southsystem.cooperative.model.User;
 import br.com.southsystem.cooperative.model.types.Vote;
+import br.com.southsystem.cooperative.service.RestApiUserService;
 import br.com.southsystem.cooperative.service.impl.v1.SessionServiceImpl;
 import br.com.southsystem.cooperative.service.impl.v1.SessionVoteServiceImpl;
 import br.com.southsystem.cooperative.service.impl.v1.UserServiceImpl;
@@ -25,29 +28,42 @@ public class SessionVoteFacade {
     private final SessionServiceImpl sessionService;
     private final UserServiceImpl userService;
     private final MessageSource messageSource;
+    private final RestApiUserService restApiUserService;
 
-    public SessionVoteFacade(
-            SessionVoteServiceImpl sessionVoteService,
-            SessionServiceImpl sessionService,
-            UserServiceImpl userService,
-            MessageSource messageSource
-    ) {
+    public SessionVoteFacade(SessionVoteServiceImpl sessionVoteService, SessionServiceImpl sessionService,
+            UserServiceImpl userService, MessageSource messageSource,
+            RestApiUserService restApiUserService) {
         this.sessionVoteService = sessionVoteService;
         this.sessionService = sessionService;
         this.userService = userService;
         this.messageSource = messageSource;
+        this.restApiUserService = restApiUserService;
+    }
+
+    public void toVoteValidateByApi(final VoteDTO vote) {
+        var user = userService.getByUuid(vote.getUser());
+        var type = user.getPerson().getDoc().length() > 11 ? "cnpj" : "cpf";
+        var validation = restApiUserService.userAbleToVote(type, user.getPerson().getDoc());
+
+        if(validation.getStatus().equals(UserStatus.UNABLE_TO_VOTE)) {
+            MessageService.createBusinessException(messageSource, MSG_EXCEPTION_BLOCKED_USER);
+        }
+        vote(vote, user);
     }
 
     public void toVote(final VoteDTO vote) {
+        var user = userService.getByUuid(vote.getUser());
+        vote(vote, user);
+    }
+
+    private void vote(VoteDTO vote, User user) {
+        if(!user.isActive()) {
+            MessageService.createBusinessException(messageSource,MSG_EXCEPTION_BLOCKED_USER);
+        }
 
         var session = sessionService.getByUuid(vote.getSession());
         checkIfSessionIsAbleToVote(session);
         checkIfUserHasVoted(vote);
-
-        var user = userService.getByUuid(vote.getUser());
-        if(!user.isActive()) {
-            MessageService.createBusinessException(messageSource,MSG_EXCEPTION_BLOCKED_USER);
-        }
 
         var userVote = new SessionVote();
         userVote.setUser(user);

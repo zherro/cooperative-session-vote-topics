@@ -7,11 +7,13 @@ import br.com.southsystem.cooperative.dto.topic.TopicUpdateDTO;
 import br.com.southsystem.cooperative.dto.user.UserCreateDTO;
 import br.com.southsystem.cooperative.dto.user.UserDTO;
 import br.com.southsystem.cooperative.model.User;
+import br.com.southsystem.cooperative.service.UserService;
 import br.com.southsystem.cooperative.service.impl.v1.UserServiceImpl;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,9 +32,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final ObjectMapper objectMapper;
-    private final UserServiceImpl userService;
 
-    public UserController(ObjectMapper objectMapper, UserServiceImpl userService) {
+    @Qualifier("userServiceV1")
+    private final UserService userService;
+
+    public UserController(ObjectMapper objectMapper, UserService userService) {
         this.objectMapper = objectMapper;
         this.userService = userService;
     }
