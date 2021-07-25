@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends SpecRepository<User> {
 
     Optional<User> getByUsername(String username);
-    Optional<Object> getByPersonDoc(String doc);
+    Optional<User> getByPersonDoc(String doc);
 }

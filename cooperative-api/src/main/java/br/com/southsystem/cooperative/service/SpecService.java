@@ -6,6 +6,14 @@ import javax.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * Specificacao de servico de persistencia de dados, serve com uma base generica
+ * para servicos desse tipo.
+ * Os metodos podem ser sobrescritos conforme necessidade para atendimento as
+ * regras de negocio.
+ *
+ * @param <T>
+ */
 public interface SpecService<T extends BaseEntity> {
 
     SpecRepository<T> getRepository();
