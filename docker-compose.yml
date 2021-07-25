@@ -9,23 +9,37 @@ services:
   expose:
    - 5432
   ports:
-   - 80:5432
+   - 5433:5432
   environment:
    - POSTGRES_PASSWORD=root
    - POSTGRES_USER=root
    - POSTGRES_DB=cooperative
   restart: unless-stopped
+ cooperativeUsersApi:
+  image: cooperative-users-api
+  network_mode: bridge
+  container_name: cooperative-users-api
+  expose:
+   - 5002
+  ports:
+   - 5002:5002
+  restart: unless-stopped
+  depends_on:
+   - cooperativePostgres
+  links:
+   - cooperativePostgres
  cooperativeApi:
   image: cooperative-api
   network_mode: bridge
   container_name: cooperative-api
   expose:
-   - 50001
+   - 5001
   ports:
    - 5001:5001
   restart: unless-stopped
   depends_on:
    - cooperativePostgres
+   - cooperativeUsersApi
   links:
    - cooperativePostgres
 volumes:
