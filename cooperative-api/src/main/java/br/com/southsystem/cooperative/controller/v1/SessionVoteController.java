@@ -1,5 +1,6 @@
 package br.com.southsystem.cooperative.controller.v1;
 
+import br.com.southsystem.cooperative.config.Cors;
 import br.com.southsystem.cooperative.dto.vote.VoteDTO;
 import br.com.southsystem.cooperative.facade.SessionVoteFacade;
 import io.swagger.annotations.Api;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "Cooperative API v1")
 @RestController
 @RequestMapping("/api/v1/vote")
-public class SessionVoteController {
+public class SessionVoteController extends Cors {
 
     private final SessionVoteFacade voteFacade;
 

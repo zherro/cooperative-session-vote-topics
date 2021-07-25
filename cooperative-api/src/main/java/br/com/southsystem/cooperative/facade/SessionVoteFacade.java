@@ -13,7 +13,9 @@ import br.com.southsystem.cooperative.service.impl.v1.SessionVoteServiceImpl;
 import br.com.southsystem.cooperative.service.impl.v1.UserServiceImpl;
 import java.time.LocalDateTime;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 import static br.com.southsystem.cooperative.exceptions.AppMessages.MSG_EXCEPTION_BLOCKED_USER;
 import static br.com.southsystem.cooperative.exceptions.AppMessages.MSG_EXCEPTION_INVALID_VOTE_TYPE;
@@ -42,11 +44,19 @@ public class SessionVoteFacade {
 
     public void toVoteValidateByApi(final VoteDTO vote) {
         var user = userService.getByUuid(vote.getUser());
-        var type = user.getPerson().getDoc().length() > 11 ? "cnpj" : "cpf";
-        var validation = restApiUserService.userAbleToVote(type, user.getPerson().getDoc());
+        var type = user.getPerson().getDoc().replaceAll("[^0-9]*", "").length() > 11 ? "cnpj" : "cpf";
 
-        if(validation.getStatus().equals(UserStatus.UNABLE_TO_VOTE)) {
-            MessageService.createBusinessException(messageSource, MSG_EXCEPTION_BLOCKED_USER);
+        try {
+            var validation = restApiUserService.userAbleToVote(type, user.getPerson().getDoc());
+
+            if (validation.getStatus().equals(UserStatus.UNABLE_TO_VOTE)) {
+                MessageService.createBusinessException(messageSource, MSG_EXCEPTION_BLOCKED_USER);
+            }
+        } catch (HttpClientErrorException ex) {
+            if(ex.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+                MessageService.createBusinessException(messageSource, MSG_EXCEPTION_BLOCKED_USER);
+            }
+            throw ex;
         }
         vote(vote, user);
     }

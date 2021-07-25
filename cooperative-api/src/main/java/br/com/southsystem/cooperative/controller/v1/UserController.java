@@ -1,14 +1,13 @@
 package br.com.southsystem.cooperative.controller.v1;
 
+import br.com.southsystem.cooperative.config.Cors;
 import br.com.southsystem.cooperative.dto.pageable.PageResponse;
 import br.com.southsystem.cooperative.dto.pageable.PageableRequest;
 import br.com.southsystem.cooperative.dto.pageable.RequestFilter;
-import br.com.southsystem.cooperative.dto.topic.TopicUpdateDTO;
 import br.com.southsystem.cooperative.dto.user.UserCreateDTO;
 import br.com.southsystem.cooperative.dto.user.UserDTO;
 import br.com.southsystem.cooperative.model.User;
 import br.com.southsystem.cooperative.service.UserService;
-import br.com.southsystem.cooperative.service.impl.v1.UserServiceImpl;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
@@ -29,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "Cooperative API v1")
 @RestController
 @RequestMapping("/api/v1/user")
-public class UserController {
+public class UserController extends Cors {
 
     private final ObjectMapper objectMapper;
 
@@ -66,7 +65,7 @@ public class UserController {
 
     @PutMapping("/{userId}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateTopic(@PathVariable("userId") String userId, @RequestBody TopicUpdateDTO dto)
+    public void updateUser(@PathVariable("userId") String userId, @RequestBody UserCreateDTO dto)
             throws JsonMappingException {
         var user = userService.getByUuid(userId);
         var userDto = objectMapper.convertValue(dto, User.class);

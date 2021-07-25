@@ -1,5 +1,6 @@
 package br.com.southsystem.cooperative.controller.v1;
 
+import br.com.southsystem.cooperative.config.Cors;
 import br.com.southsystem.cooperative.dto.pageable.PageResponse;
 import br.com.southsystem.cooperative.dto.pageable.PageableRequest;
 import br.com.southsystem.cooperative.dto.pageable.RequestFilter;
@@ -30,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "Cooperative API v1")
 @RestController
 @RequestMapping("/api/v1/pauta")
-public class TopicController {
+public class TopicController extends Cors {
 
     private final ObjectMapper objectMapper;
     private final TopicService topicService;

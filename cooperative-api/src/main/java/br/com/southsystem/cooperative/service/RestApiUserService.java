@@ -18,6 +18,7 @@ public class RestApiUserService
     }
 
     public ValidatorResponse userAbleToVote(final String type, final String doc) {
+
         var uri = this.uri.replace("{type}", type)
                 .replace("{doc}", doc);
        return restTemplate.getForEntity(uri, ValidatorResponse.class)

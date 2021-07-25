@@ -34,7 +34,7 @@ public class ValidatorCPFCNPJ
      * limpa caracteres nao numericos
      */
     public static String clearDoc(String value) {
-        return value.replace("[^0-9]", "");
+        return value.replaceAll("[^0-9]*", "");
     }
 
     /**
