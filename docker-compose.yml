@@ -1,0 +1,32 @@
+version: "3"
+services:
+ cooperativePostgres:
+  image: postgres:latest
+  network_mode: bridge
+  container_name: cooperative-postgres
+  volumes:
+   - postgres-data:/var/lib/postgresql/data
+  expose:
+   - 5432
+  ports:
+   - 80:5432
+  environment:
+   - POSTGRES_PASSWORD=root
+   - POSTGRES_USER=root
+   - POSTGRES_DB=cooperative
+  restart: unless-stopped
+ cooperativeApi:
+  image: cooperative-api
+  network_mode: bridge
+  container_name: cooperative-api
+  expose:
+   - 50001
+  ports:
+   - 5001:5001
+  restart: unless-stopped
+  depends_on:
+   - cooperativePostgres
+  links:
+   - cooperativePostgres
+volumes:
+ postgres-data:
