@@ -2,6 +2,7 @@ package br.com.southsystem.cooperative.facade;
 
 import br.com.southsystem.cooperative.exceptions.BusinessException;
 import br.com.southsystem.cooperative.model.Session;
+import br.com.southsystem.cooperative.service.RestApiUserService;
 import br.com.southsystem.cooperative.service.impl.v1.SessionServiceImpl;
 import br.com.southsystem.cooperative.service.impl.v1.SessionVoteServiceImpl;
 import br.com.southsystem.cooperative.service.impl.v1.UserServiceImpl;
@@ -19,6 +20,7 @@ class SessionVoteFacadeTest {
     private final SessionVoteServiceImpl sessionVoteService = Mockito.mock(SessionVoteServiceImpl.class);
     private final SessionServiceImpl sessionService = Mockito.mock(SessionServiceImpl.class);
     private final UserServiceImpl userService = Mockito.mock(UserServiceImpl.class);
+    private final RestApiUserService restApiUserService = Mockito.mock(RestApiUserService.class);
     @BeforeEach
     void beforeEach() {
         var resource = new ReloadableResourceBundleMessageSource();
@@ -29,7 +31,8 @@ class SessionVoteFacadeTest {
 
     @Test
     void ifSessionHasClosedThenShouldReturnBusinessException() {
-        var facade = new SessionVoteFacade(sessionVoteService,sessionService, userService, messageSource);
+        var facade = new SessionVoteFacade(sessionVoteService,sessionService, userService, messageSource,
+                restApiUserService);
         var session = new Session();
         session.setActive(false);
 
@@ -44,7 +47,8 @@ class SessionVoteFacadeTest {
 
     @Test
     void ifSessionHasNotStartedThenShouldReturnBusinessException() {
-        var facade = new SessionVoteFacade(sessionVoteService,sessionService, userService, messageSource);
+        var facade = new SessionVoteFacade(sessionVoteService,sessionService, userService, messageSource,
+                restApiUserService);
         var session = new Session();
         session.setStartTime(LocalDateTime.now().plusHours(1));
         session.setEndTime(LocalDateTime.now().plusHours(2));
@@ -53,7 +57,8 @@ class SessionVoteFacadeTest {
 
     @Test
     void ifSessionIsAbleToVoteThenDontThrowException() {
-        var facade = new SessionVoteFacade(sessionVoteService,sessionService, userService, messageSource);
+        var facade = new SessionVoteFacade(sessionVoteService,sessionService, userService, messageSource,
+                restApiUserService);
         var session = new Session();
         session.setActive(true);
         session.setStartTime(LocalDateTime.now().minusHours(1));
