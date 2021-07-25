@@ -1,6 +1,6 @@
-package br.com.southsystem.cooperative.controller.doc;
+package br.com.southsystem.usersapi.doc;
 
-import br.com.southsystem.cooperative.model.User;
+import br.com.southsystem.usersapi.doc.model.User;
 import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

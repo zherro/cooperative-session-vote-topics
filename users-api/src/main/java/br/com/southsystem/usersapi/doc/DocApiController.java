@@ -1,9 +1,9 @@
-package br.com.southsystem.cooperative.controller.doc;
+package br.com.southsystem.usersapi.doc;
 
+import br.com.southsystem.usersapi.doc.model.DocList;
+import br.com.southsystem.usersapi.doc.model.UserStatus;
 import br.com.southsystem.cooperative.controller.doc.api.GeraCpfCnpj;
 import br.com.southsystem.cooperative.controller.doc.api.ValidatorCPFCNPJ;
-import br.com.southsystem.cooperative.controller.doc.model.DocList;
-import br.com.southsystem.cooperative.controller.doc.model.UserStatus;
 import br.com.southsystem.cooperative.controller.doc.model.ValidatorResponse;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
