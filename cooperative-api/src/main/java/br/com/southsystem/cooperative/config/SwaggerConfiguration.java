@@ -17,8 +17,7 @@ public class SwaggerConfiguration extends WebMvcConfigurationSupport {
 
     @Bean
     public Docket apiDocketV2() {
-        ApiInfoBuilder info = new ApiInfoBuilder().title("Cooperative API").description("Cooperative Session API v2");
-
+        ApiInfoBuilder info = new ApiInfoBuilder().title("Cooperative API v2").description("Cooperative Session API: adicionado a essa versoa o consumo de api externa para validacao de dados do usuario");
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(info.version("2.0").build())
                 .groupName("cooperative-api-latest")
@@ -30,7 +29,7 @@ public class SwaggerConfiguration extends WebMvcConfigurationSupport {
 
     @Bean
     public Docket apiDocket() {
-        ApiInfoBuilder info = new ApiInfoBuilder().title("Cooperative API").description("Cooperative Session API v1");
+        ApiInfoBuilder info = new ApiInfoBuilder().title("Cooperative API v1").description("Cooperative Session API: permite criacao de pautas e votacao");
 
         return new Docket(DocumentationType.SWAGGER_2).apiInfo(info.version("1.0").build())
                 .groupName("cooperative-api-v1.0").select()
@@ -40,7 +39,7 @@ public class SwaggerConfiguration extends WebMvcConfigurationSupport {
 
     @Bean
     public Docket apiDocketUsers() {
-        ApiInfoBuilder info = new ApiInfoBuilder().title("Users API").description("Users API v1");
+        ApiInfoBuilder info = new ApiInfoBuilder().title("Users API").description("Users API v1: endpoints para fim de testes");
 
         return new Docket(DocumentationType.SWAGGER_2).apiInfo(info.version("users-api-v1.0").build())
                 .groupName("users-api-v1.0").select()
