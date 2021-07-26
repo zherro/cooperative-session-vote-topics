@@ -1,5 +1,6 @@
-package br.com.southsystem.cooperative.controller.doc.model;
+package br.com.southsystem.cooperative.dto;
 
+import br.com.southsystem.cooperative.mock.userapi.doc.model.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

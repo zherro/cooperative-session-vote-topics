@@ -1,4 +1,4 @@
-package br.com.southsystem.cooperative.controller.doc.model;
+package br.com.southsystem.cooperative.mock.userapi.doc.model;
 
 public enum UserStatus {
     ABLE_TO_VOTE(true), UNABLE_TO_VOTE(false);

@@ -23,7 +23,7 @@ public interface SessionRepository extends SpecRepository<Session> {
             + " WHERE true = :getAll "
             + " OR (false = :activeFilter AND s.active = :activeFilter ) "
             + " OR (true = :activeFilter AND s.active = :activeFilter AND s.endTime > :atDate )"
-            + " ORDER BY s.endTime ")
+            + " ORDER BY s.createdAt DESC ")
     Page<Session> findAll(boolean getAll, boolean activeFilter, LocalDateTime atDate, Pageable pageable);
 
     Optional<Session> findFirstByTopicUuidOrderByEndTimeDesc(String topicUuid);

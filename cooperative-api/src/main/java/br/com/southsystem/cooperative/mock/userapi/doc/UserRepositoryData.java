@@ -1,4 +1,4 @@
-package br.com.southsystem.cooperative.controller.doc;
+package br.com.southsystem.cooperative.mock.userapi.doc;
 
 import br.com.southsystem.cooperative.model.User;
 import java.util.Optional;

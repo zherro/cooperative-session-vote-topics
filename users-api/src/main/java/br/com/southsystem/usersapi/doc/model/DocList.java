@@ -1,4 +1,4 @@
-package br.com.southsystem.cooperative.controller.doc.model;
+package br.com.southsystem.usersapi.doc.model;
 
 import java.util.List;
 import lombok.AllArgsConstructor;

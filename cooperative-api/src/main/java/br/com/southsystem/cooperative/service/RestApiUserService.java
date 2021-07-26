@@ -1,6 +1,6 @@
 package br.com.southsystem.cooperative.service;
 
-import br.com.southsystem.cooperative.controller.doc.model.ValidatorResponse;
+import br.com.southsystem.cooperative.dto.ValidatorResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -18,6 +18,7 @@ public class RestApiUserService
     }
 
     public ValidatorResponse userAbleToVote(final String type, final String doc) {
+
         var uri = this.uri.replace("{type}", type)
                 .replace("{doc}", doc);
        return restTemplate.getForEntity(uri, ValidatorResponse.class)

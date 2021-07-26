@@ -1,18 +1,25 @@
-package br.com.southsystem.cooperative.controller.v1;
+package br.com.southsystem.cooperative.controller;
 
+import br.com.southsystem.cooperative.config.Cors;
 import br.com.southsystem.cooperative.dto.pageable.PageResponse;
 import br.com.southsystem.cooperative.dto.pageable.PageableRequest;
 import br.com.southsystem.cooperative.dto.session.RequestSessionFilter;
 import br.com.southsystem.cooperative.dto.session.SessionCreateDTO;
 import br.com.southsystem.cooperative.dto.session.SessionDTO;
 import br.com.southsystem.cooperative.dto.session.SessionUpdateDTO;
+import br.com.southsystem.cooperative.exceptions.AppMessages;
+import br.com.southsystem.cooperative.exceptions.MessageService;
 import br.com.southsystem.cooperative.model.Session;
+import br.com.southsystem.cooperative.service.SessionService;
 import br.com.southsystem.cooperative.service.TopicService;
 import br.com.southsystem.cooperative.service.impl.v1.SessionServiceImpl;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,25 +33,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(value = "Cooperative API v1")
-@RestController
-@RequestMapping("/api/v1/session")
-public class SessionController {
-
-    private final ObjectMapper objectMapper;
-    private final SessionServiceImpl sessionService;
-    private final TopicService topicService;
-
-    public SessionController(ObjectMapper objectMapper, SessionServiceImpl sessionService, TopicService topicService) {
-        this.objectMapper = objectMapper;
-        this.sessionService = sessionService;
-        this.topicService = topicService;
-    }
+public interface SessionController extends Cors {
+    Logger log();
+    SessionService getService();
+    TopicService getTopicService();
+    ObjectMapper mapper();
+    MessageSource messageSource();
 
     @GetMapping
-    public PageResponse listTopic(RequestSessionFilter filter) {
+    default PageResponse listSession(RequestSessionFilter filter) {
+        log().info("m=listSession, getting sessions. page: {}, size: {}", filter.getPage(), filter.getSize());
         var pageable = new PageableRequest(filter.getPage(), filter.getSize(), "createdAt", 10).build();
-        var result = sessionService.list(pageable, filter);
+        var result = getService().list(pageable, filter);
         var topics = result.stream()
                 .map(SessionDTO::fromSession)
                 .collect(Collectors.toList());
@@ -52,47 +52,52 @@ public class SessionController {
     }
 
     @GetMapping("/opened/{topic}")
-    public ResponseEntity getOpenedSessionForTopic(@PathVariable String topic) {
-        var session = sessionService.hasActiveSessionForTopic(topic);
+    default ResponseEntity getOpenedSessionForTopic(@PathVariable String topic) {
+        log().info("m=getOpenedSessionForTopic, retrieve opened session for topic: {}", topic);
+        var session = getService().hasActiveSessionForTopic(topic);
         if(session == null) {
-            return ResponseEntity.notFound().build();
+            MessageService.createBusinessException(messageSource(), AppMessages.MSG_EXCEPTION_NOT_HAVE_SESSION_OPENED_FOR_TOPIC);
         }
         return ResponseEntity.ok(SessionDTO.fromSession(session));
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity getSession(@PathVariable String uuid) {
-        var topic = SessionDTO.fromSession( sessionService.getByUuid(uuid) );
+    default ResponseEntity getSession(@PathVariable String uuid) {
+        log().info("m=getSession, retrieve session: {}", uuid);
+        var topic = SessionDTO.fromSession( getService().getByUuid(uuid) );
         return ResponseEntity.ok().body(topic);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void openNewSession(@RequestBody SessionCreateDTO dto) {
-        var entity = objectMapper.convertValue(dto, Session.class);
-        var topic = topicService.getByUuid(dto.getTopicId());
+    default void openNewSession(@RequestBody SessionCreateDTO dto) {
+        log().info("m=openNewSession, creating session for topic: {}", dto.getTopicId());
+        var entity = mapper().convertValue(dto, Session.class);
+        var topic = getTopicService().getByUuid(dto.getTopicId());
         entity.setActive(true);
         entity.setTopic(topic);
-        entity = sessionService.create(entity);
+        entity = getService().create(entity);
         ResponseEntity.status(HttpStatus.CREATED)
                 .body(SessionDTO.fromSession(entity));
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateSession(@RequestParam("topicId") String topicId, @RequestBody SessionUpdateDTO updateDTO)
+    default void updateSession(@RequestParam("topicId") String sessionId, @RequestBody SessionUpdateDTO updateDTO)
             throws JsonMappingException {
-        var topic = sessionService.getByUuid(topicId);
-        var data = objectMapper.convertValue(updateDTO, Session.class);
-        var topicMerged = objectMapper.updateValue(topic, data);
+        log().info("m=updateSession, updating session: {}", sessionId);
+        var topic = getService().getByUuid(sessionId);
+        var data = mapper().convertValue(updateDTO, Session.class);
+        var topicMerged = mapper().updateValue(topic, data);
 
-        sessionService.update(topicMerged);
+        getService().update(topicMerged);
     }
 
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteSession(@PathVariable("uuid") String uuid) {
-        sessionService.remove(uuid);
+    default void deleteSession(@PathVariable("uuid") String uuid) {
+        log().info("m=deleteSession, updating session: {}", uuid);
+        getService().remove(uuid);
     }
 
 

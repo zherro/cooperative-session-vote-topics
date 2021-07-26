@@ -2,10 +2,14 @@ package br.com.southsystem.cooperative.service.impl.v1;
 
 import br.com.southsystem.cooperative.exceptions.ResourceNotFoundException;
 import br.com.southsystem.cooperative.model.Topic;
+import br.com.southsystem.cooperative.model.TopicQueryResult;
 import br.com.southsystem.cooperative.repository.SpecRepository;
 import br.com.southsystem.cooperative.repository.TopicRepository;
 import br.com.southsystem.cooperative.service.TopicService;
+import java.time.LocalDateTime;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +31,11 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public RuntimeException notFoundException(String key) {
         return new ResourceNotFoundException(messageSource, Topic.class.getSimpleName() , key);
+    }
+
+    @Override
+    public Page<TopicQueryResult> listAllWithActiveSession(Pageable pageable) {
+        return topicRepository.findAll(LocalDateTime.now(), pageable);
     }
 
     @Override

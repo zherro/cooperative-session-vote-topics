@@ -1,10 +1,10 @@
-package br.com.southsystem.cooperative.controller.doc;
+package br.com.southsystem.cooperative.mock.userapi.doc;
 
-import br.com.southsystem.cooperative.controller.doc.api.GeraCpfCnpj;
-import br.com.southsystem.cooperative.controller.doc.api.ValidatorCPFCNPJ;
-import br.com.southsystem.cooperative.controller.doc.model.DocList;
-import br.com.southsystem.cooperative.controller.doc.model.UserStatus;
-import br.com.southsystem.cooperative.controller.doc.model.ValidatorResponse;
+import br.com.southsystem.cooperative.mock.userapi.doc.api.GeraCpfCnpj;
+import br.com.southsystem.cooperative.mock.userapi.doc.api.ValidatorCPFCNPJ;
+import br.com.southsystem.cooperative.mock.userapi.doc.model.DocList;
+import br.com.southsystem.cooperative.mock.userapi.doc.model.UserStatus;
+import br.com.southsystem.cooperative.dto.ValidatorResponse;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -66,7 +66,7 @@ public class DocApiController {
         var gerador = new GeraCpfCnpj();
         var docs = new ArrayList<String>();
 
-        for (int i =0; i < qtd; i++) {
+        for (var i =0; i < qtd; i++) {
             if(type.equals("cpf")) {
                 docs.add(gerador.cpf());
             } else if(type.equals("cnpj")) {

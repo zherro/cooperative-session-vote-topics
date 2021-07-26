@@ -123,7 +123,7 @@ public class SessionServiceImpl implements SessionService {
         return getVoteSummaries(sessionUuid);
     }
 
-    private List<VoteSummary> getVoteSummaries(String sessionUuid) {
+    public List<VoteSummary> getVoteSummaries(String sessionUuid) {
         return sessionRepository.summarizeVotes(sessionUuid);
     }
 }
