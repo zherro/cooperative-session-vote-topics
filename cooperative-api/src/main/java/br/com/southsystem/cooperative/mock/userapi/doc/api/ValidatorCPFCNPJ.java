@@ -1,7 +1,8 @@
 package br.com.southsystem.cooperative.mock.userapi.doc.api;
 
-public class ValidatorCPFCNPJ
-{
+public class ValidatorCPFCNPJ {
+
+    private  ValidatorCPFCNPJ() {}
 
     // CPF
     private static final int[] WEIGHT_SSN = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
@@ -24,7 +25,7 @@ public class ValidatorCPFCNPJ
     }
 
     private static boolean check(String tfn, int length, int[] weight) {
-        final String number = tfn.substring(0, length);
+        final var number = tfn.substring(0, length);
         final int digit1 = calculate(number, weight);
         final int digit2 = calculate(number + digit1, weight);
         return tfn.equals(number + digit1 + digit2);

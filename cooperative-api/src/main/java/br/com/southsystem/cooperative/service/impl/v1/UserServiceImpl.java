@@ -6,6 +6,8 @@ import br.com.southsystem.cooperative.model.User;
 import br.com.southsystem.cooperative.repository.SpecRepository;
 import br.com.southsystem.cooperative.repository.UserRepository;
 import br.com.southsystem.cooperative.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -13,10 +15,12 @@ import org.springframework.stereotype.Service;
 import static br.com.southsystem.cooperative.exceptions.AppMessages.MSG_EXCEPTION_DOCUMENT_IN_USE;
 import static br.com.southsystem.cooperative.exceptions.AppMessages.MSG_EXCEPTION_USERNAME_IN_USE;
 import static br.com.southsystem.cooperative.exceptions.AppMessages.MSG_EXCEPTION_USER_DATA_INVALID;
+import static br.com.southsystem.cooperative.exceptions.AppMessages.MSG_EXCEPTION_USER_NOT_FOUD;
 
 @Service
 @Qualifier("userServiceV1")
 public class UserServiceImpl implements UserService {
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
     private final MessageSource messageSource;
@@ -38,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(User data) {
-        validateUser(data);
+        validateUser(true, data);
         validateUserConsistence(true, data);
 
         if(data.getPerson() != null) {
@@ -55,6 +59,7 @@ public class UserServiceImpl implements UserService {
      * @param #{{@link br.com.southsystem.cooperative.model.User}
      */
     private void validateUserConsistence(final boolean isNew, final User data) {
+        log.info("m=validateUserConsistence, validating if username and document already in use for user: {}", data.getUuid());
         userRepository.getByUsername(data.getUsername())
                 .ifPresent(u -> {
                     if(isNew || !u.getId().equals(data.getId()))
@@ -69,8 +74,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getByUuid(String uuid)    {
+        try {
+            return UserService.super.getByUuid(uuid);
+        } catch (ResourceNotFoundException nfe) {
+            MessageService.createBusinessException(messageSource, MSG_EXCEPTION_USER_NOT_FOUD);;
+        }
+        return null;
+    }
+    @Override
     public User update(User data) {
-        validateUser(data);
+        validateUser(false, data);
         validateUserConsistence(false, data);
         return UserService.super.update(data);
     }
@@ -83,9 +97,10 @@ public class UserServiceImpl implements UserService {
      *  - documento: deve possuir no minimo 11 caracteres
      * @param #{{@link br.com.southsystem.cooperative.model.User}
      */
-    protected void validateUser(User data) {
+    protected void validateUser(final boolean isNew, User data) {
+        log.info("m=validateUser, validating required user info, User: {}", data.getUuid());
         if(data.getUsername() == null || data.getUsername().length() < 3
-                || data.getPassword() == null || data.getPassword().length() < 4
+                || ( isNew && (data.getPassword() == null || data.getPassword().length() < 4 ))
                 || data.getPerson() == null
                     || data.getPerson().getName() == null || data.getPerson().getName().length() < 3
                     || data.getPerson().getDoc() == null || data.getPerson().getDoc().length() < 11

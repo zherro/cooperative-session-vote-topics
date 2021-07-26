@@ -1,4 +1,4 @@
-package br.com.southsystem.cooperative.controller.v1;
+package br.com.southsystem.cooperative.controller;
 
 import br.com.southsystem.cooperative.config.Cors;
 import br.com.southsystem.cooperative.dto.pageable.PageResponse;
@@ -10,9 +10,8 @@ import br.com.southsystem.cooperative.model.User;
 import br.com.southsystem.cooperative.service.UserService;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.Api;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,29 +20,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 
-@Api(value = "Cooperative API v1")
-@RestController
-@RequestMapping("/api/v1/user")
-public class UserController extends Cors {
-
-    private final ObjectMapper objectMapper;
-
-    @Qualifier("userServiceV1")
-    private final UserService userService;
-
-    public UserController(ObjectMapper objectMapper, UserService userService) {
-        this.objectMapper = objectMapper;
-        this.userService = userService;
-    }
+public interface UserController extends Cors {
+    Logger log();
+    UserService getUserService();
+    ObjectMapper mapper();
 
     @GetMapping
-    public PageResponse listUsers(RequestFilter filter) {
+    default PageResponse listUsers(RequestFilter filter) {
+        log().info("m=listUsers, getting users. page: {}, size: {}", filter.getPage(), filter.getSize());
+
         var pageable = new PageableRequest(filter.getPage(), filter.getSize(), "createdAt", 10).build();
-        var result = userService.list(pageable);
+        var result = getUserService().list(pageable);
         var topics = result.stream()
                 .map(UserDTO::fromUser)
                 .collect(Collectors.toList());
@@ -51,33 +40,37 @@ public class UserController extends Cors {
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity getUser(@PathVariable String uuid) {
-        var topic = UserDTO.fromUser( userService.getByUuid(uuid) );
+    default ResponseEntity getUser(@PathVariable String uuid) {
+        log().info("m=getUser, retrieve user: {}", uuid);
+        var topic = UserDTO.fromUser( getUserService().getByUuid(uuid) );
         return ResponseEntity.ok().body(topic);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createUser(@RequestBody UserCreateDTO dto) {
+    default void createUser(@RequestBody UserCreateDTO dto) {
+        log().info("m=createUser, creating user");
         var entity = UserCreateDTO.toUser(dto);
-        userService.create(entity);
+        getUserService().create(entity);
     }
 
     @PutMapping("/{userId}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateUser(@PathVariable("userId") String userId, @RequestBody UserCreateDTO dto)
+    default void updateUser(@PathVariable("userId") String userId, @RequestBody UserCreateDTO dto)
             throws JsonMappingException {
-        var user = userService.getByUuid(userId);
-        var userDto = objectMapper.convertValue(dto, User.class);
-        var merged = objectMapper.updateValue(user, userDto);
+        log().info("m=updateUser, updating user: {}", userId);
+        var user = getUserService().getByUuid(userId);
+        var userDto = mapper().convertValue(dto, User.class);
+        var merged = mapper().updateValue(user, userDto);
 
-        userService.update(merged);
+        getUserService().update(merged);
     }
 
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteUser(@PathVariable("uuid") String uuid) {
-        userService.remove(uuid);
+    default void deleteUser(@PathVariable("uuid") String uuid) {
+        log().info("m=deleteUser, updating user: {}", uuid);
+        getUserService().remove(uuid);
     }
 
 }

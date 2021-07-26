@@ -66,7 +66,7 @@ public class DocApiController {
         var gerador = new GeraCpfCnpj();
         var docs = new ArrayList<String>();
 
-        for (int i =0; i < qtd; i++) {
+        for (var i =0; i < qtd; i++) {
             if(type.equals("cpf")) {
                 docs.add(gerador.cpf());
             } else if(type.equals("cnpj")) {

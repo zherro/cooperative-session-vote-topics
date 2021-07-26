@@ -12,7 +12,9 @@ public enum AppMessages {
     MSG_EXCEPTION_DOCUMENT_IN_USE("exceptions.msg.document-in-use"),
     MSG_EXCEPTION_BLOCKED_USER("exceptions.msg.user-blocked"),
     MSG_EXCEPTION_INVALID_VOTE_TYPE("exceptions.msg.invalid-vote-type"),
-    MSG_EXCEPTION_USER_HAS_VOTED("exceptions.msg.user-has-voted")
+    MSG_EXCEPTION_USER_HAS_VOTED("exceptions.msg.user-has-voted"),
+    MSG_EXCEPTION_NOT_HAVE_SESSION_OPENED_FOR_TOPIC("exceptions.msg.hot-have-session-for-topic"),
+    MSG_EXCEPTION_USER_NOT_FOUD("exceptions.msg.user-not-found")
     ;
 
     private String msgKey;

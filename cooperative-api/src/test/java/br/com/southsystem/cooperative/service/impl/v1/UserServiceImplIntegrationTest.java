@@ -43,7 +43,7 @@ class UserServiceImplIntegrationTest {
         Assertions.assertTrue(user.getId() != null && user.getId() > 0);
         Assertions.assertTrue(user.getUuid() != null && user.getUuid().length() > 0);
         Assertions.assertTrue(person.getId() != null && person.getId() > 0);
-        Assertions.assertTrue(person.getUser().getId().equals(user.getId()));
+        Assertions.assertEquals(person.getUser().getId(), user.getId());
     }
 
     @Test

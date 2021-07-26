@@ -37,7 +37,7 @@ class UserServiceImplTest {
 
         UserServiceImpl service = new UserServiceImpl(userRepository, messageSource);
 
-        Assertions.assertDoesNotThrow(() -> service.validateUser(user));
+        Assertions.assertDoesNotThrow(() -> service.validateUser(true, user));
     }
 
     @Test
@@ -53,26 +53,26 @@ class UserServiceImplTest {
 
         UserServiceImpl service = new UserServiceImpl(userRepository, messageSource);
 
-        Assertions.assertThrows(BusinessException.class, () -> service.validateUser(user));
+        Assertions.assertThrows(BusinessException.class, () -> service.validateUser(true, user));
 
         user.setUsername("test");
         user.setPassword("");
-        Assertions.assertThrows(BusinessException.class, () -> service.validateUser(user));
+        Assertions.assertThrows(BusinessException.class, () -> service.validateUser(true, user));
 
         user.setPassword("aqswdefr");
         person.setName(null);
-        Assertions.assertThrows(BusinessException.class, () -> service.validateUser(user));
+        Assertions.assertThrows(BusinessException.class, () -> service.validateUser(true, user));
 
         user.setPerson(null);
-        Assertions.assertThrows(BusinessException.class, () -> service.validateUser(user));
+        Assertions.assertThrows(BusinessException.class, () -> service.validateUser(true, user));
 
         user.setPerson(person);
         person.setName("test");
         person.setDoc("098611526");
-        Assertions.assertThrows(BusinessException.class, () -> service.validateUser(user));
+        Assertions.assertThrows(BusinessException.class, () -> service.validateUser(true, user));
 
         person.setDoc("01234567895");
-        Assertions.assertDoesNotThrow(() -> service.validateUser(user));
+        Assertions.assertDoesNotThrow(() -> service.validateUser(true, user));
     }
 
 }

@@ -83,6 +83,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                     .msg(ex.getMessage())
                     .code(HttpStatus.BAD_REQUEST.value())
                     .build();
+            ex.printStackTrace();
         }
 
         return super.handleExceptionInternal(ex, body, headers, status, request);
