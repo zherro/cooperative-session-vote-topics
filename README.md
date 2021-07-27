@@ -72,7 +72,7 @@ Para alterar propriedades de configuração do projeto, vá para `cooperative-ap
 - depois de devidamente configurado o profile da aplicação, com o comando abaixo é
   executar a aplicação localmente:
 
-```aidl
+```
 ./gradlew clean build && java -Dspring.profiles.active=dev -jar build/libs/*SNAPSHOT.jar
 ```
 > é importante executar o comando acima dentro da pasta raiz do projeto
