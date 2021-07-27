@@ -10,7 +10,7 @@ Serviço de validação de usuários
 - Nenhuma configuração adicional é necessária
 
 **Com o comando abaixo o projeto pode ser executado sem problemas**
-```aidl
+```
 ./gradlew clean build && java -jar build/libs/*SNAPSHOT.jar
 ```
 > é importante executar o comando acima dentro da pasta raiz do projeto
