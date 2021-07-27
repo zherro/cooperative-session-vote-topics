@@ -1,4 +1,4 @@
-package br.com.southsystem.cooperative.controller.doc.api;
+package br.com.southsystem.usersapi.doc.api;
 
 public class ValidatorCPFCNPJ
 {
