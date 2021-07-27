@@ -41,6 +41,10 @@ dependencies {
 	testImplementation 'org.springframework.amqp:spring-rabbit-test'
 }
 
+jar {
+	enabled = false
+}
+
 test {
 	useJUnitPlatform()
 }

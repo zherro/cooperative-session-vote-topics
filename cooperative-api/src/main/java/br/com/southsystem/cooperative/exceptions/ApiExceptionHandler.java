@@ -27,7 +27,23 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return this.handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
     }
 
-    @ExceptionHandler(BusinessException.class)
+
+    @ExceptionHandler(MessageNotPublishedExceptionSupress.class)
+    public ResponseEntity handleBusinessException(MessageNotPublishedExceptionSupress ex, WebRequest request) {
+
+        HttpStatus status = HttpStatus.CREATED;
+
+        ErrorDetails error = ErrorDetails.builder()
+                .code(status.value())
+                .title("Application Warn")
+                .msg(ex.getMessage())
+                .build();
+
+        ex.printStackTrace();
+        return this.handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+    }
+
+        @ExceptionHandler(BusinessException.class)
     public ResponseEntity handleBusinessException(BusinessException ex, WebRequest request) {
 
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;

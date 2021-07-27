@@ -1,6 +1,7 @@
 package br.com.southsystem.cooperative.facade;
 
 import br.com.southsystem.cooperative.dto.session.SessionDTO;
+import br.com.southsystem.cooperative.exceptions.MessageNotPublishedExceptionSupress;
 import br.com.southsystem.cooperative.model.Session;
 import br.com.southsystem.cooperative.model.types.VoteSummary;
 import br.com.southsystem.cooperative.service.SessionService;
@@ -70,6 +71,8 @@ public class SessionFacade  {
                     "m=createAndPublishSession, error to attempt publish session in queue, session: {}",
                     session.getUuid(),
                     ex);
+        } catch (Exception ex ) {
+            throw new MessageNotPublishedExceptionSupress();
         }
         return session;
     }
