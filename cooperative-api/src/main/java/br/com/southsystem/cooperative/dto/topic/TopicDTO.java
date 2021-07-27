@@ -40,7 +40,7 @@ public class TopicDTO {
 
     private SessionDTO session;
 
-    private List<VoteSummary> result = new ArrayList<>();
+    private List<VoteSummary> result;
 
     public static TopicDTO fromTopic(Topic topic) {
         return TopicDTO.builder()

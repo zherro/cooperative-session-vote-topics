@@ -4,6 +4,10 @@ import br.com.southsystem.cooperative.dto.topic.TopicDTO;
 import br.com.southsystem.cooperative.model.Session;
 import br.com.southsystem.cooperative.model.types.VoteSummary;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
@@ -17,8 +21,14 @@ public class SessionDTO {
     private final TopicDTO topic;
     private final String name;
 
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private final LocalDateTime startTime;
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private final LocalDateTime endTime;
+
     private final int durationMinutes;
     private final String info;
 
@@ -43,7 +53,7 @@ public class SessionDTO {
                 .info(session.getInfo())
                 .name(session.getName())
                 .startTime(session.getStartTime())
-                .topic( TopicDTO.fromTopic(session.getTopic()) )
+                .topic( session.getTopic() == null ? null : TopicDTO.fromTopic(session.getTopic()) )
                 .result(session.getSessionResult())
                 .build();
         if(dto != null) {

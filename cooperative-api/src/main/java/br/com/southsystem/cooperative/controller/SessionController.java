@@ -76,9 +76,7 @@ public interface SessionController extends Cors {
         var topic = getTopicService().getByUuid(dto.getTopicId());
         entity.setActive(true);
         entity.setTopic(topic);
-        entity = getService().create(entity);
-        ResponseEntity.status(HttpStatus.CREATED)
-                .body(SessionDTO.fromSession(entity));
+        getService().create(entity);
     }
 
     @PutMapping
