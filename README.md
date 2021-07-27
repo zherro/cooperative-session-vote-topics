@@ -45,7 +45,7 @@ Em ambiente de dev é necessário possuir instalado na máquina o java 11 e banc
 A versão 3 deste projeto utiliza RabbitMQ como sistemas de mensagens, para não precisar instalar
 o rabbitMQ manualmente, é possível utilizá-lo em docker (para isso é necessário possuir o Docker instalado).
 
-```bash
+```
 docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 ```
 
