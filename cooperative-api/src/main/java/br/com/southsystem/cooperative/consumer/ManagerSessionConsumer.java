@@ -26,7 +26,11 @@ public class ManagerSessionConsumer {
         this.sessionFacade = sessionFacade;
     }
 
-    @RabbitListener(queues = RabbitConfig.SESSION_QUEUE, containerFactory = "sessionManagerFactory")
+    @RabbitListener(
+            queues = RabbitConfig.SESSION_QUEUE,
+            containerFactory = "sessionManagerFactory",
+            id = "sessionConsumer"
+    )
     public void sessionConsumer(final Message message) {
         log.info("m=sessionConsumer, start validating message");
         var sessionDTO = validateMessage(message);

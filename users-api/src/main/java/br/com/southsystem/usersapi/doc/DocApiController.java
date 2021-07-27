@@ -1,12 +1,13 @@
 package br.com.southsystem.usersapi.doc;
 
+import br.com.southsystem.usersapi.doc.api.GeraCpfCnpj;
+import br.com.southsystem.usersapi.doc.api.ValidatorCPFCNPJ;
 import br.com.southsystem.usersapi.doc.model.DocList;
 import br.com.southsystem.usersapi.doc.model.UserStatus;
-import br.com.southsystem.cooperative.controller.doc.api.GeraCpfCnpj;
-import br.com.southsystem.cooperative.controller.doc.api.ValidatorCPFCNPJ;
 import br.com.southsystem.cooperative.controller.doc.model.ValidatorResponse;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,26 +17,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/users")
 public class DocApiController {
-
-    @Autowired
-    private UserRepositoryData userRepository;
+//
+//    @Autowired
+//    private UserRepositoryData userRepository;
 
     @GetMapping("/cpf/validate")
     public ResponseEntity validateCPF(final String cpf) {
         var docNumber = ValidatorCPFCNPJ.clearDoc(cpf);
         var isValid = ValidatorCPFCNPJ.isValidSsn(docNumber);
         if(!isValid) {
-            return ResponseEntity.notFound().build();
+            var response = new ValidatorResponse(docNumber, UserStatus.of(isValid));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
 
-        var user = userRepository.findFirstUserByPersonDoc(docNumber);
-        if(user.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        if(!user.get().isActive()) {
-            isValid = false;
-        }
+//        var user = userRepository.findFirstUserByPersonDoc(docNumber);
+//        if(user.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        if(!user.get().isActive()) {
+//            isValid = false;
+//        }
 
         var response = new ValidatorResponse(docNumber, UserStatus.of(isValid));
         return ResponseEntity.ok(response);
@@ -49,14 +51,14 @@ public class DocApiController {
             return ResponseEntity.notFound().build();
         }
 
-        var user = userRepository.findFirstUserByPersonDoc(docNumber);
-        if(user.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        if(!user.get().isActive()) {
-            isValid = false;
-        }
+//        var user = userRepository.findFirstUserByPersonDoc(docNumber);
+//        if(user.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        if(!user.get().isActive()) {
+//            isValid = false;
+//        }
         var response = new ValidatorResponse(docNumber, UserStatus.of(isValid));
         return ResponseEntity.ok(response);
     }

@@ -1,10 +1,13 @@
 package br.com.southsystem.cooperative.config;
 
 import javax.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.ExchangeBuilder;
 import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -12,6 +15,8 @@ import org.springframework.context.annotation.Profile;
 @Profile("!test")
 @Configuration
 public class RabbitQueueSessionConfig {
+
+    private static final Logger log = LoggerFactory.getLogger(RabbitQueueSessionConfig.class);
 
     public static final String SESSION_QUEUE = "cooperative.amqp.queue";
     public static final String SESSION_QUEUE_DLQ = SESSION_QUEUE + ".dlq";
@@ -21,28 +26,42 @@ public class RabbitQueueSessionConfig {
 
     private final RabbitAdmin rabbitAdmin;
 
+    private final RabbitListenerEndpointRegistry rabbitListenerEndpointRegistry;
+
     @Autowired
-    public RabbitQueueSessionConfig(RabbitAdmin rabbitAdmin) {
+    public RabbitQueueSessionConfig(RabbitAdmin rabbitAdmin,
+            RabbitListenerEndpointRegistry rabbitListenerEndpointRegistry) {
         this.rabbitAdmin = rabbitAdmin;
+        this.rabbitListenerEndpointRegistry = rabbitListenerEndpointRegistry;
     }
 
     @PostConstruct
     public void constructRabbitComponents( ) {
-        createQueue(SESSION_QUEUE, SESSION_QUEUE_EXCHANGE, SESSION_QUEUE_DLQ);
-        createDlq(SESSION_QUEUE_DLQ);
-        createQueue(SESSION_QUEUE_DELAYED, SESSION_QUEUE_EXCHANGE, SESSION_QUEUE);
+        try {
+            log.info("m=constructRabbitComponents, creating queues rabbit");
+            createQueue(SESSION_QUEUE, SESSION_QUEUE_EXCHANGE, SESSION_QUEUE_DLQ);
+            createDlq(SESSION_QUEUE_DLQ);
+            createQueue(SESSION_QUEUE_DELAYED, SESSION_QUEUE_EXCHANGE, SESSION_QUEUE);
 
-        createExchange(SESSION_QUEUE_EXCHANGE);
-        createExchange(SESSION_QUEUE_EXCHANGE_DELAYED);
+            createExchange(SESSION_QUEUE_EXCHANGE);
+            createExchange(SESSION_QUEUE_EXCHANGE_DELAYED);
 
-        // QUEUE
-        biding(SESSION_QUEUE, SESSION_QUEUE_EXCHANGE);
+            // QUEUE
+            biding(SESSION_QUEUE, SESSION_QUEUE_EXCHANGE);
 
-        // DQL
-        biding(SESSION_QUEUE_DLQ, SESSION_QUEUE_EXCHANGE);
+            // DQL
+            biding(SESSION_QUEUE_DLQ, SESSION_QUEUE_EXCHANGE);
 
-        // DELAYED
-        biding(SESSION_QUEUE_DELAYED, SESSION_QUEUE_EXCHANGE_DELAYED);
+            // DELAYED
+            biding(SESSION_QUEUE_DELAYED, SESSION_QUEUE_EXCHANGE_DELAYED);
+        } catch (Exception e) {
+            log.warn("m=constructRabbitComponents, oh no!!! fail to attempt create rabbit queues automaticaly, "
+                    + "verify your profile configuration and restart the application.");
+//
+//            // para os listeners para não ficar gerando logs
+//            // utilizado apenas por ser um projeto de testes
+//            rabbitListenerEndpointRegistry.getListenerContainer("sessionConsumer").stop();
+        }
     }
 
     public void createQueue(String queue, String exchange, String dql) {

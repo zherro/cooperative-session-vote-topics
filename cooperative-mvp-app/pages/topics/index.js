@@ -30,7 +30,7 @@ const Users = () => {
 
 	const openSession = async (event, topicId) => {
 		const data = {
-			durationMinutes: 5,
+			durationMinutes: 1,
 			info: "Sessão de votação",
 			name: "COD: " + makeid(5),
 			topicId: topicId

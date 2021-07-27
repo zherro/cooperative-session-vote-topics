@@ -8,6 +8,7 @@ RUN mkdir -p /usr/src
 WORKDIR /usr/src
 
 # copy source files
+COPY docker-config/confi.js const
 COPY . /usr/src
 
 # install dependencies
