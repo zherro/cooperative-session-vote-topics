@@ -72,7 +72,9 @@ public interface TopicController extends Cors {
         log().info("m=updateTopic, updating topic: {}", topicId);
         var topic = getService().getByUuid(topicId);
         var topicDTO = mapper().convertValue(topicUpdateDTO, Topic.class);
-        var topicMerged = mapper().updateValue(topic, topicDTO);
+        var topicMerged = mapper().updateValue(new Topic(), topicDTO);
+        topicMerged.setId(topic.getId());
+        topicMerged.setUuid(topic.getUuid());
 
         getService().update(topicMerged);
     }

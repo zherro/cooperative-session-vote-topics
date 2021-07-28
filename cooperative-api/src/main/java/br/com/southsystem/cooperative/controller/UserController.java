@@ -61,7 +61,9 @@ public interface UserController extends Cors {
         log().info("m=updateUser, updating user: {}", userId);
         var user = getUserService().getByUuid(userId);
         var userDto = mapper().convertValue(dto, User.class);
-        var merged = mapper().updateValue(user, userDto);
+        var merged = mapper().updateValue(new User(), userDto);
+        merged.setId(user.getId());
+        merged.setUuid(user.getUuid());
 
         getUserService().update(merged);
     }

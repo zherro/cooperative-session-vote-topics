@@ -15,12 +15,25 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfiguration extends WebMvcConfigurationSupport {
 
+
+    @Bean
+    public Docket apiDocketV3() {
+        ApiInfoBuilder info = new ApiInfoBuilder().title("Cooperative API v3").description("Cooperative Session API: adicionado produção e consumo de mensageria");
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(info.version("3.0").build())
+                .groupName("cooperative-api-latest")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("br.com.southsystem.cooperative"))
+                .paths(PathSelectors.ant("/api/v3/**"))
+                .build();
+    }
+
     @Bean
     public Docket apiDocketV2() {
-        ApiInfoBuilder info = new ApiInfoBuilder().title("Cooperative API v2").description("Cooperative Session API: adicionado a essa versoa o consumo de api externa para validacao de dados do usuario");
+        ApiInfoBuilder info = new ApiInfoBuilder().title("Cooperative API v2").description("Cooperative Session API: adicionado a essa versao o consumo de api externa para validacao de dados do usuario");
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(info.version("2.0").build())
-                .groupName("cooperative-api-latest")
+                .groupName("cooperative-api-v2.0")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("br.com.southsystem.cooperative"))
                 .paths(PathSelectors.ant("/api/v2/**"))

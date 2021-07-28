@@ -39,7 +39,7 @@ Em ambiente de dev é necessário possuir instalado na máquina o java 11 e banc
 A versão 3 deste projeto utiliza RabbitMQ como sistemas de mensagens, para não precisar instalar
 o rabbitMQ manualmente, é possível utilizá-lo em docker (para isso é necessário possuir o Docker instalado).
 
-```bash
+```
 docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 ```
 
@@ -66,7 +66,7 @@ Para alterar propriedades de configuração do projeto, vá para `cooperative-ap
 - depois de devidamente configurado o profile da aplicação, com o comando abaixo é
   executar a aplicação localmente:
 
-```aidl
+```
 ./gradlew clean build && java -Dspring.profiles.active=dev -jar build/libs/*SNAPSHOT.jar
 ```
 > é importante executar o comando acima dentro da pasta raiz do projeto
@@ -77,7 +77,7 @@ E a documentação da api poderá ser acessada através do endereço: [http://lo
 
 ### Docker build
 
-Para gerar build docker do projeto utilize o comando:
+Para gerar build dos projetos e em seguida ja subir as imagens, execute o arquivo [](Dockerfile.)
 ``` docker build -t cooperative-api . ```
 
 ## Documentação de serviços

@@ -4,6 +4,7 @@ import br.com.southsystem.cooperative.controller.UserController;
 import br.com.southsystem.cooperative.dto.user.UserCreateDTO;
 import br.com.southsystem.cooperative.service.UserService;
 import br.com.southsystem.cooperative.service.impl.v1.UserServiceImpl;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
@@ -61,11 +62,13 @@ public class UserControllerV2Impl implements UserController {
     @Override
     @PutMapping("/{userId}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateUser(@PathVariable("userId") String userId, @RequestBody UserCreateDTO dto) {
+    public void updateUser(@PathVariable("userId") String userId, @RequestBody UserCreateDTO dto)
+            throws JsonMappingException
+    {
         log.info("m=updateUser, updating user: {}", userId);
         if(dto.getPerson() != null && dto.getPerson().getDoc() != null) {
             dto.getPerson().setDoc(dto.getPerson().getDoc().replaceAll("[^0-9]*", ""));
         }
-        UserController.super.createUser(dto);
+        UserController.super.updateUser(userId,dto);
     }
 }

@@ -84,11 +84,13 @@ public interface SessionController extends Cors {
     default void updateSession(@RequestParam("topicId") String sessionId, @RequestBody SessionUpdateDTO updateDTO)
             throws JsonMappingException {
         log().info("m=updateSession, updating session: {}", sessionId);
-        var topic = getService().getByUuid(sessionId);
+        var session = getService().getByUuid(sessionId);
         var data = mapper().convertValue(updateDTO, Session.class);
-        var topicMerged = mapper().updateValue(topic, data);
+        var merged = mapper().updateValue(new Session(), data);
+        merged.setId(session.getId());
+        merged.setUuid(session.getUuid());
 
-        getService().update(topicMerged);
+        getService().update(merged);
     }
 
     @DeleteMapping("/{uuid}")
