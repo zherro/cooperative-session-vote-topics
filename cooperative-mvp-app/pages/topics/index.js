@@ -22,7 +22,7 @@ const Users = () => {
 	}, []);
 
 	const closeTopic = async (event, topic) => {
-		await patchApi(event, 'pauta/' + topic, errorMessage, setErrorMessage, '', {}, router);
+		await patchApi(setBlock, event, 'pauta/' + topic, errorMessage, setErrorMessage, '', {}, router);
 		fetchData( users.size, users.page)
 	}
 
@@ -38,6 +38,7 @@ const Users = () => {
 			topicId: topicId
 		}
 		await postApi(
+			setBlock,
 			event, 'sessao',
 			errorMessage, setErrorMessage,
 			'/topics/' + topicId, data, router

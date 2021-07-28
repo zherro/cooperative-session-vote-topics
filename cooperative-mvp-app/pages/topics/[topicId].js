@@ -1,6 +1,7 @@
 import { useRouter } from "next/dist/client/router"
 import { useEffect, useState } from "react"
 import { Alert, Button, Col, Container, Row } from "reactstrap"
+import Block from "../../components/block"
 import Header from "../../components/header"
 import { getApi, postApi } from "../../const/apiCall"
 
