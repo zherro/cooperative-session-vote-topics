@@ -83,8 +83,17 @@ E a documentação da api poderá ser acessada através do endereço: [http://lo
 
 ### Docker build
 
-Para gerar build docker do projeto utilize o comando:
-``` docker build -t cooperative-api . ```
+Para gerar build dos projetos e em seguida ja subir as imagens, execute o arquivo [install.sh](../install.sh).
+
+Esse arquivo contém instrução shell para buildar as imagens localmente e executar os containers em seguida.
+
+### Docker run
+
+As aplicações estão publicadas no https://hub.docker.com" target="_blank">Docker Hub</a>.
+As aplicações podem ser executadas localmente através do <a href="https://docs.docker.com/compose/#compose-documentation" target=">docker compose</a>.
+
+veja o docker compose file: [docker-compose.yml](../docker-compose.yml)
+
 
 ## Documentação de serviços
 
