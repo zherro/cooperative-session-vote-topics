@@ -3,7 +3,7 @@ services:
  cooperativePostgres:
   image: postgres:latest
   network_mode: bridge
-  container_name: cooperative-postgres
+  container_name: zherro-cooperative-postgres
   volumes:
    - postgres-data:/var/lib/postgresql/data
   expose:
@@ -17,14 +17,15 @@ services:
   restart: unless-stopped
  rabbitmq:
   image: rabbitmq:management
+  network_mode: bridge
   ports:
     - "5672:5672" #JMS Port
     - "15672:15672" #Management Port - default user:pass = guest:guest
   restart: unless-stopped
  cooperativeUsersApi:
-  image: cooperative-users-api
+  image: zherro-cooperative-users-api
   network_mode: bridge
-  container_name: cooperative-users-api
+  container_name: zherro-cooperative-users-api
   expose:
    - 5002
   ports:
@@ -54,7 +55,7 @@ services:
  cooperativeMvpAPP:
   image: cooperative-app
   network_mode: bridge
-  container_name: cooperative-app
+  container_name: zherro-cooperative-app
   expose:
    - 3000
   ports:
