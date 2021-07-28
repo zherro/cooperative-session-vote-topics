@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useRouter } from "next/dist/client/router";
 import { useEffect, useState } from "react";
-import { Badge, Button, Col, Container, NavLink, Row, Table } from "reactstrap"
+import { Alert, Button, Col, Container, NavLink, Row, Table } from "reactstrap"
+import Block from "../../components/block";
 import Header from "../../components/header"
 import Pagination from "../../components/Pagination";
 import { getApi, patchApi } from "../../const/apiCall";
@@ -11,17 +12,19 @@ const Users = () => {
 	const [data, setData] = useState({})
 	const [errorMessage, setErrorMessage] = useState('');
 	const router = useRouter();
+	const [block, setBlock] = useState(false)
 
 	useEffect(async () => {
-		getApi(`sessao?size=${5}`, setData, errorMessage, setErrorMessage)
+		getApi(setBlock, `sessao?size=${5}`, setData, errorMessage, setErrorMessage)
 	}, []);
 
 	const fetchData = async(size, page) => {
-		getApi(`sessao?size=${size}&page=${page}`, setData, errorMessage, setErrorMessage)
+		getApi(setBlock, `sessao?size=${size}&page=${page}`, setData, errorMessage, setErrorMessage)
 	}
 
 	return (
 		<>
+		<Block  show={block} />
 			<Container>
 				<Header />
 				<div style={{ maxWidth: '400px', margin: "0 auto" }}>
@@ -35,6 +38,14 @@ const Users = () => {
 						</a>
 					</Col>
 				</Row>
+				{
+					errorMessage?.length > 0 &&
+					<div className="mt-3">
+						<Alert color="warning">
+							{errorMessage}
+						</Alert>
+					</div>
+				}
 				<Row>
 					<Col>
 						<Table striped className="mt-3">

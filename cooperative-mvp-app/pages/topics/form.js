@@ -2,12 +2,11 @@ import axios from "axios"
 import { useState } from "react"
 import { CardTitle, Button, Col, Container, Form, FormGroup, Input, Label, Row, Alert } from "reactstrap"
 import Header from "../../components/header"
+import { topic } from "../../const/dataGenerator"
 import CONFIG_API from "../../const/confi"
 import { useForm } from 'react-hook-form';
 import { useRouter } from "next/dist/client/router"
-import cpf from "../../const/cpf"
-import makeid from "../../const/randonId"
-import { generateName, topic } from "../../const/dataGenerator"
+import Block from "../../components/block"
 
 const UserForm = () => {
 
@@ -15,9 +14,10 @@ const UserForm = () => {
 
 	let defaultValues = {
 		description: mock?.description,
-  		theme: mock?.theme
+		theme: mock?.theme
 	}
 
+	const [block, setBlock] = useState(false)
 	const [errorMessage, setErrorMessage] = useState('');
 	const router = useRouter();
 
@@ -32,25 +32,35 @@ const UserForm = () => {
 	});
 
 	const onSubmit = handleSubmit(async (formData, event) => {
-		event.preventDefault();
-		if (errorMessage) setErrorMessage('');
+		setBlock(true)
+		try {
+			event.preventDefault();
+			if (errorMessage) setErrorMessage('');
 
-		console.table(formData);
-		
-		const res = await fetch(CONFIG_API() + "pauta", {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(formData),
-		});
-		console.table(res);
-		if (res.status == 201) {
-			router.push('/topics');
-		} else {
-			throw new Error(await res.text());
+			console.table(formData);
+
+			const res = await fetch(CONFIG_API() + "pauta", {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(formData),
+			});
+
+			setBlock(false)
+			console.table(res);
+			if (res.status == 201) {
+				router.push('/topics');
+			} else {
+				setErrorMessage('iiiihh! Deu ruin. Provavelmente a api está off.')
+				throw new Error(await res.text());
+			}
+		} catch (err) {
+			setBlock(false)
+			setErrorMessage('iiiihh! Deu ruin. Provavelmente a api está off.')
+
 		}
-		
+
 	});
 
 	const generateCPF = (e) => {
@@ -60,6 +70,7 @@ const UserForm = () => {
 
 
 	return <>
+		<Block show={block} />
 		<Container>
 			<Header />
 			<Row>
@@ -80,7 +91,7 @@ const UserForm = () => {
 							<Label for="theme" sm={2}>Tema</Label>
 							<Col sm={10}>
 								<textarea rows="5" className="form-control" {...register('theme')} type="text" name="theme" id="theme" placeholder="Tema da pauta...">
-									
+
 								</textarea>
 							</Col>
 						</FormGroup>
@@ -88,7 +99,7 @@ const UserForm = () => {
 							<Label for="password" sm={2}>Descrição</Label>
 							<Col sm={10}>
 								<textarea rows="10" className="form-control" {...register('description')} type="text" name="description" id="description" placeholder="Tema da pauta...">
-									
+
 								</textarea>
 							</Col>
 						</FormGroup>

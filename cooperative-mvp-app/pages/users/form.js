@@ -9,6 +9,7 @@ import cpf from "../../const/cpf"
 import makeid from "../../const/randonId"
 import { generateName } from "../../const/dataGenerator"
 import { postApi } from "../../const/apiCall"
+import Block from "../../components/block"
 
 const UserForm = () => {
 	let defaultValues = {
@@ -20,6 +21,7 @@ const UserForm = () => {
 
 	const [errorMessage, setErrorMessage] = useState('');
 	const router = useRouter();
+	const [block, setBlock] = useState(false)
 
 	const {
 		handleSubmit,
@@ -38,7 +40,7 @@ const UserForm = () => {
 			name: formData.personName
 		}
 
-		const res = await postApi(event, 'users', errorMessage, setErrorMessage,
+		const res = await postApi(setBlock, event, 'users', errorMessage, setErrorMessage,
 		'/users', formData, router);		
 	});
 
@@ -49,6 +51,7 @@ const UserForm = () => {
 
 
 	return <>
+		<Block  show={block} />
 		<Container>
 			<Header />
 			<Row>

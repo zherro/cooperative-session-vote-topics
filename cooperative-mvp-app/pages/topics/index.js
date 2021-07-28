@@ -3,6 +3,7 @@ import { useRouter } from "next/dist/client/router";
 import { route } from "next/dist/next-server/server/router";
 import { useEffect, useState } from "react";
 import { Alert, Button, Col, Container, NavLink, Row, Table } from "reactstrap"
+import Block from "../../components/block";
 import Header from "../../components/header"
 import Pagination from "../../components/Pagination";
 import { getApi, patchApi, postApi } from "../../const/apiCall";
@@ -12,11 +13,12 @@ import makeid from "../../const/randonId";
 const Users = () => {
 
 	const [users, setData] = useState({})
+	const [block, setBlock] = useState(false)
 	const [errorMessage, setErrorMessage] = useState('');
 	const router = useRouter();
 
 	useEffect(async () => {
-		const res = getApi(`pauta?size=5`, setData, errorMessage, setErrorMessage)
+		const res = getApi(setBlock, `pauta?size=5`, setData, errorMessage, setErrorMessage)
 	}, []);
 
 	const closeTopic = async (event, topic) => {
@@ -25,7 +27,7 @@ const Users = () => {
 	}
 
 	const fetchData = async ( size, page) => {
-		await getApi(`pauta?size=${size}&page=${page}`, setData, errorMessage, setErrorMessage)
+		await getApi(setBlock, `pauta?size=${size}&page=${page}`, setData, errorMessage, setErrorMessage)
 	}
 
 	const openSession = async (event, topicId) => {
@@ -48,6 +50,7 @@ const Users = () => {
 
 	return (
 		<>
+			<Block  show={block} />
 			<Container>
 				<Header />
 				<div style={{ maxWidth: '400px', margin: "0 auto" }}>

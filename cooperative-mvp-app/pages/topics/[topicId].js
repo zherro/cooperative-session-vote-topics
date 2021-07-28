@@ -8,13 +8,14 @@ const Session = () => {
 	const router = useRouter()
 	const { topicId } = router.query
 	const [data, setData] = useState(null)
+	const [block, setBlock] = useState(false)
 	const [errorMessage, setErrorMessage] = useState('');
 	const [okMessage, setOkMessage] = useState(false);
 
 
 	useEffect(() => {
 		if (topicId)
-			getApi('sessao/opened/' + topicId, setData, errorMessage, setErrorMessage)
+			getApi(setBlock, 'sessao/opened/' + topicId, setData, errorMessage, setErrorMessage)
 	}, [topicId]);
 
 	const registerVote = async (e, vote) => {
@@ -23,7 +24,7 @@ const Session = () => {
 			user: localStorage.getItem('userId'),
 			vote: vote
 		};
-		await postApi(e, 'voto',
+		await postApi(setBlock, e, 'voto',
 			errorMessage, setErrorMessage,
 			'', d, router);
 
@@ -32,6 +33,7 @@ const Session = () => {
 		}
 	}
 	return <>
+		<Block  show={block} />
 		<Container>
 			<Header />
 

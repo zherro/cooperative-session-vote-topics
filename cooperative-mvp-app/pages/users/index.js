@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Modal, ModalBody, ModalFooter, ModalHeader, NavLink, Row, Table } from "reactstrap"
+import Block from "../../components/block";
 import Header from "../../components/header"
 import Pagination from "../../components/Pagination";
 import { getApi } from "../../const/apiCall";
@@ -10,10 +11,11 @@ const Users = () => {
 	const [user, setToAuth] = useState({})
 	const [errorMessage, setErrorMessage] = useState('');
 	const [modal, setModal] = useState(false);
+	const [block, setBlock] = useState(false)
 
 	const toggle = () => setModal(!modal);
 	const getUsers = async (size, page) => {
-		const res = await getApi(`users?size=${size}&page=${page}`,
+		const res = await getApi(setBlock,`users?size=${size}&page=${page}`,
 			setUsers, errorMessage, setErrorMessage)
 	}
 
@@ -32,6 +34,7 @@ const Users = () => {
 
 	return (
 		<>
+			<Block  show={block} />
 			<Container>
 				<Header updateUserInfo={user} />
 				<div style={{ maxWidth: '400px', margin: "0 auto" }}>
