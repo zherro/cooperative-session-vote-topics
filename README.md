@@ -83,16 +83,36 @@ E a documentação da api poderá ser acessada através do endereço: [http://lo
 
 ### Docker build
 
-Para gerar build dos projetos e em seguida ja subir as imagens, execute o arquivo [install.sh](../install.sh).
+Para gerar build dos projetos e em seguida ja subir as imagens, execute o arquivo [install.sh](install.sh).
 
 Esse arquivo contém instrução shell para buildar as imagens localmente e executar os containers em seguida.
 
+Dessa forma a api sera servida em: [http://localhost:5001/swagger-ui.html](http://localhost:5001/swagger-ui.html)
+
+E o APP sera servido em: [http://localhost:3001/swagger-ui.html](http://localhost:3001/swagger-ui.html)
+
+
 ### Docker run
 
-As aplicações estão publicadas no https://hub.docker.com" target="_blank">Docker Hub</a>.
-As aplicações podem ser executadas localmente através do <a href="https://docs.docker.com/compose/#compose-documentation" target=">docker compose</a>.
+As aplicações estão publicadas no <a href="https://hub.docker.com" target="_blank">Docker Hub</a>.
+As aplicações podem ser executadas localmente através do <a href="https://docs.docker.com/compose/#compose-documentation" target="_blank">docker compose</a>.
 
-veja o docker compose file: [docker-compose.yml](../docker-compose.yml)
+veja o docker compose file: [docker-compose.yml](docker-compose.yml)
+
+
+Dessa forma a api sera servida em: [http://localhost:5001/swagger-ui.html](http://localhost:5001/swagger-ui.html)
+
+E o APP sera servido em: [http://localhost:3001](http://localhost:3001)
+
+
+### Carga inicial
+
+O projeto possui uma migration que é executada pelo Flyway Migration quando a aplicaçação é executada
+ pela primeira vez em um banco de dados. O Flyway faz o controle dos scripts para que sejam executados uma unica vez.
+
+A migration [cooperative-api/src/main/resources/db/migration/V3__INITIAL_DATA_SAMPLE_FOR_DEMO.sql](cooperative-api/src/main/resources/db/migration/V3__INTIAL_DATA_SALPLE_FOR_DEMO.sql), 
+realiza uma carga inicial de dado na aplicação. Porém não é crucial para o funcionamento, 
+podendo ser removida caso não seja viavel realizar essa carga inicial.
 
 
 ## Documentação de serviços

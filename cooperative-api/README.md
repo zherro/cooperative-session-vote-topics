@@ -77,8 +77,17 @@ E a documentação da api poderá ser acessada através do endereço: [http://lo
 
 ### Docker build
 
-Para gerar build dos projetos e em seguida ja subir as imagens, execute o arquivo [](Dockerfile.)
+Para gerar build dos projetos e em seguida ja subir as imagens, execute o arquivo [Dockerfile](Dockerfile)
 ``` docker build -t cooperative-api . ```
+
+### Carga inicial
+
+O projeto possui uma migration que é executada pelo Flyway Migration quando a aplicaçação é executada
+ pela primeira vez em um banco de dados. O Flyway faz o controle dos scripts para que sejam executados uma unica vez.
+
+A migration [src/main/resources/db/migration/V3__INITIAL_DATA_SAMPLE_FOR_DEMO.sql](src/main/resources/db/migration/V3__INTIAL_DATA_SALPLE_FOR_DEMO.sql), 
+realiza uma carga inicial de dado na aplicação. Porém não é crucial para o funcionamento, 
+podendo ser removida caso não seja viavel realizar essa carga inicial.
 
 ## Documentação de serviços
 
